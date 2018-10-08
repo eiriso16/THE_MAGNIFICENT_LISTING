@@ -15,7 +15,7 @@ const users = [];
 //create user
 app.post("/api/user",function(req,res){
 	
-	let user = req.body; 
+	let user = req.body;
 	let isUser = false;
 	
 	for(let i in users){
