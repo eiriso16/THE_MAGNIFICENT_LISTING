@@ -14,16 +14,16 @@ const users = [];
 
 //create user
 app.post("/api/user",function(req,res){
-	
+
 	let user = req.body;
 	let isUser = false;
-	
+
 	for(let i in users){
 		if(user.email === users[i].email){
 			isUser = true;
 		}
 	}
-	
+
 	if(!isUser){
 		user.email = req.body.email;
 		user.name = req.body.name;
@@ -38,19 +38,19 @@ app.post("/api/user",function(req,res){
 
 //user login
 app.post("/api/login",function(req,res){
-	
+
 	let user = req.body;
 	let name = "";
-	//let foundUser = {};
-	
+	let foundUser = {};
+
 	for(let i in users){
 		if(user.email === users[i].email && user.password === users[i].password){
-			name = users[i].name;
-			//foundUser = users[i]; //bør ikke returnere passord??	
+		//	name = users[i].name;
+			foundUser = users[i]; //bør ikke returnere passord??
 		}
 	}
-	
-	res.json(name).end();
-	//res.json(foundUser).end();
-	
+
+//	res.json(name).end();
+	res.json(foundUser).end();
+
 })

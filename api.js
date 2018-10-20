@@ -12,5 +12,5 @@ METHOD: POST
 ENDPOINT: api/login
 BODY (json): {"email":"mrx@uia.no", "password":"123456"}
 //RESPONSE (json): {"email":"mrx@uia.no", "password":"123456"}
-//RESPONSE (json): {user}
-RESPONSE (json): name
+RESPONSE (json): {user}
+//RESPONSE (json): name

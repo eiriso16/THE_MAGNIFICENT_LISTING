@@ -1,123 +1,45 @@
 <html>
     <head>
         <meta charset="utf-8" />
-        <title>Tittel</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>App-test</title>
+        <link href="css/app-css.css" rel="stylesheet">
+
     </head>
 
     <body>
-        <h2>Create new user</h2>
-        <input type="text" id="newName" placeholder="your name">
-        <input type="text" id="newEmail" placeholder="your email address">
-        <input type="text" id="newPsw" placeholder="create password">
-        <button id="newBtn">Create user</button>
+        <div id="front">
+            <div id="grid1"><h3>Things todo</h3></div>
+            <div id="grid2">
+                <div id="elem1" class="greyBox">
+                    New user
+                </div>
+                <div id="new" class="space hidden">
+                    <input id="newName" type="text" placeholder="Name">
+                    <input id="newEmail" type="text" placeholder="Email address">
+                    <input id="newPsw" type="password" placeholder="Password">
+                    <button id="newBtn">Create user</button>
+                    <p id="userResp"></p>
+                </div>
+            </div>
+            <div id="grid3">
+                <div id="elem2" class="greyBox">
+                    Log in
+                </div>
+                <div id="divLogin" class="space hidden">
+                    <input id="userEmail" type="text" placeholder="email">
+                    <input id="userPsw" type="password" placeholder="password">
+                    <button id="login">Log in</button>
+                    <p id="loginResp"></p>
+                </div>
+            </div>
+            <div id="grid4">
+                <div id="elem3" class="greyBox">
+                    Just visiting
+                </div>
+            </div>
+        </div>
 
-        <p id="response"></p>
-        <hr>
-        <h2>Log in user</h2>
-        <input type="text" id="userEmail" placeholder="email">
-        <input type="text" id="userPsw" placeholder="password">
-        <button id="login">Log in</button>
-
-        <p id="loginResponse"></p>
-
-        <script>
-
-            "use strict"
-
-            //let newPsw = document.getElementById("newPsw");
-            let newBtn = document.getElementById("newBtn");
-            newBtn.onclick = henteData;
-
-            function henteData(){
-                let newName = document.getElementById("newName").value;
-                let newEmail = document.getElementById("newEmail").value;
-                let newPsw = document.getElementById("newPsw").value;
-                //test om alle felt har innhold?
-                sendDataTilServer(newName, newEmail, newPsw);
-            }
-
-            function sendDataTilServer(name, email, password){
-
-                //fetch er egentlig en GET, må angi metode hvis det er post eller annet
-                //uten content-type ble det tomt i req.body
-
-                fetch("/api/user", {
-                    method: "POST", 
-                    headers: {
-                        "Content-Type": "application/json; charset=utf-8",
-                    },
-                    body: JSON.stringify({
-                        name: name,
-                        email: email,
-                        password: password
-                    })
-                }).then(newUserResponse).then(newUserDisplay).catch(newUserError);
-            } 
-
-            function newUserResponse(response){
-                return response.json();
-            }
-
-            //data inneholder res.json() fra server-fila
-            function newUserDisplay(data){ 
-
-                let res = document.getElementById("response");
-                if(typeof data === 'object'){
-
-                    res.innerHTML = "User created with userid " + data["id"];
-                }
-                else {
-                    res.innerHTML = data;
-                }      
-            }
-
-            function newUserError(err){
-                res.innerHTML = "Something went wrong. Errormessage: " + err;
-            }
-
-
-            //----- Code for login -----
-
-            let loginBtn = document.getElementById("login");
-            loginBtn.onclick = loginData;
-
-            function loginData() {
-                let userEmail = document.getElementById("userEmail").value;
-                let userPsw = document.getElementById("userPsw").value;
-                logInUser(userEmail, userPsw);
-            }
-
-            function logInUser(email, password){
-
-                fetch("/api/login", {
-                    method: "POST", 
-                    headers: {
-                        "Content-Type": "application/json; charset=utf-8",
-                    },
-                    body: JSON.stringify({
-                        email: email,
-                        password: password
-                    })
-                }).then(loginResponse).then(loginDisplay).catch(loginError);
-            } 
-
-            function loginResponse(response){
-                return response.json();
-            }
-
-            function loginDisplay(data){
-                let loginRes = document.getElementById("loginResponse");
-                if(data){
-                    loginRes.innerHTML = "Welcome " + data;
-                }
-                else loginRes.innerHTML = "Wrong email or password";
-            }
-
-            function loginError(err){
-                console.log(err);
-            }
-
-        </script>
-
+        <script src="js/app.js" type="text/javascript"></script>
     </body>
 </html>
