@@ -1,0 +1,69 @@
+* {
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+
+#front {
+  display: grid;
+  grid-template-columns: auto;
+  grid-template-rows: 10% auto auto auto;
+  text-align: center;
+  height: 100%;
+}
+
+#grid1 {
+  background-color: #999999;
+  grid-row-start: 1;
+}
+
+#grid2 {
+  background-color: #e6e6e6;
+  grid-row-start: 2;
+}
+
+#grid3 {
+  background-color: lightgrey;
+  grid-row-start: 3;
+}
+
+#grid4 {
+  background-color: #e6e6e6;
+  grid-row-start: 4;
+}
+
+.greyBox{
+    border: solid 2px #bfbfbf;
+    padding: 15px;
+    margin: 20px;
+    width: 50%;
+    height: 50px;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 15px;
+    font-size: 14pt;
+}
+
+.greyBox:hover {
+    box-shadow: 0 0 20px white;
+    cursor: pointer;
+}
+
+.hidden {
+  visibility: hidden;
+}
+
+.space {
+  margin: 5px;
+}
+
+:not(div){
+  border-radius: 5px;
+}
+
+:not(input){
+    color: white;
+}
+
+button:focus {
+  outline: none;
+}
