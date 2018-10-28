@@ -1,16 +1,8 @@
 "use strict"
 
 //---------create user-----------
-let elem1 = document.getElementById("elem1");
-elem1.onclick = newUser;
-
-function newUser(){
-  elem1.classList.add("hidden");
-  let newDiv= document.getElementById("new");
-  newDiv.classList.remove("hidden");
-  let btn = document.getElementById("newBtn");
-  btn.onclick = henteData;
-}
+let btnNew = document.getElementById("newBtn");
+btnNew.onclick = henteData;
 
 function henteData(){
   let newName = document.getElementById("newName").value;
@@ -57,8 +49,7 @@ function passwordTest(psw){
 }
 
 function sendDataTilServer(name, email, password){
-
-  fetch("/api/user", {
+  fetch("/app/user", {
     method: "POST",
     headers: {
       "Content-Type": "application/json; charset=utf-8",
@@ -75,12 +66,9 @@ function newUserResponse(response){
   return response.json();
 }
 
-//data inneholder res.json() fra server-fila
 function newUserDisplay(data){
-
   let res = document.getElementById("userResp");
   if(typeof data === 'object'){
-
     res.innerHTML = "User created with userid " + data["id"];
   }
   else {
@@ -92,19 +80,9 @@ function newUserError(err){
   res.innerHTML = "Something went wrong. Errormessage: " + err;
 }
 
-
 //-------------- Login user------------
-
-let elem2 = document.getElementById("elem2");
-elem2.onclick = loginUser;
-
-function loginUser(){
-  elem2.classList.add("hidden");
-  let login = document.getElementById("divLogin");
-  login.classList.remove("hidden");
-  let btn = document.getElementById("login");
-  btn.onclick = loginData;
-}
+let btnLogin = document.getElementById("login");
+btnLogin.onclick = loginData;
 
 function loginData() {
   let userEmail = document.getElementById("userEmail").value;
@@ -113,8 +91,7 @@ function loginData() {
 }
 
 function logInUser(email, password){
-
-  fetch("/api/login", {
+  fetch("/app/login", {
     method: "POST",
     headers: {
       "Content-Type": "application/json; charset=utf-8",

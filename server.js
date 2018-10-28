@@ -13,7 +13,7 @@ console.log('server running', app.get('port'));
 const users = [];
 
 //create user
-app.post("/api/user",function(req,res){
+app.post("/app/user",function(req,res){
 
 	let user = req.body;
 	let isUser = false;
@@ -37,7 +37,7 @@ app.post("/api/user",function(req,res){
 })
 
 //user login
-app.post("/api/login",function(req,res){
+app.post("/app/login",function(req,res){
 
 	let user = req.body;
 	let name = "";
