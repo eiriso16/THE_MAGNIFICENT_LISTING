@@ -1,45 +1,30 @@
 <html>
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>App-test</title>
-        <link href="css/app-css.css" rel="stylesheet">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Things todo</title>
+</head>
 
-    </head>
+<body>
+  <h3>Things todo</h3>
 
-    <body>
-        <div id="front">
-            <div id="grid1"><h3>Things todo</h3></div>
-            <div id="grid2">
-                <div id="elem1" class="greyBox">
-                    New user
-                </div>
-                <div id="new" class="space hidden">
-                    <input id="newName" type="text" placeholder="Name">
-                    <input id="newEmail" type="text" placeholder="Email address">
-                    <input id="newPsw" type="password" placeholder="Password">
-                    <button id="newBtn">Create user</button>
-                    <p id="userResp"></p>
-                </div>
-            </div>
-            <div id="grid3">
-                <div id="elem2" class="greyBox">
-                    Log in
-                </div>
-                <div id="divLogin" class="space hidden">
-                    <input id="userEmail" type="text" placeholder="email">
-                    <input id="userPsw" type="password" placeholder="password">
-                    <button id="login">Log in</button>
-                    <p id="loginResp"></p>
-                </div>
-            </div>
-            <div id="grid4">
-                <div id="elem3" class="greyBox">
-                    Just visiting
-                </div>
-            </div>
-        </div>
+  <div>
+    <span>New user </span>
+    <input id="newName" type="text" placeholder="Name">
+    <input id="newEmail" type="text" placeholder="Email address">
+    <input id="newPsw" type="password" placeholder="Password">
+    <button id="newBtn">Create user</button>
+    <p id="userResp"></p>
+  </div>
 
-        <script src="js/app.js" type="text/javascript"></script>
-    </body>
+  <div>
+    <span>Log in</span>
+    <input id="userEmail" type="text" placeholder="email">
+    <input id="userPsw" type="password" placeholder="password">
+    <button id="login">Log in</button>
+    <p id="loginResp"></p>
+  </div>
+
+  <script src="js/app.js" type="text/javascript"></script>
+</body>
 </html>
