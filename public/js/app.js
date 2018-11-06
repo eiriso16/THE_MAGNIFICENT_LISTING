@@ -2,95 +2,48 @@
 
 //---------create user-----------
 let btnNew = document.getElementById("newBtn");
-btnNew.onclick = henteData;
+btnNew.onclick = createUser;
+let userResp = document.getElementById("userResp");
 
-function henteData(){
-  let newName = document.getElementById("newName").value;
-  let newEmail = document.getElementById("newEmail").value;
-  let newPsw = document.getElementById("newPsw").value;
+async function createUser(evt){
+  evt.preventDefault();
+  let userForm = document.getElementById("newUser");
+  let formData = new FormData(userForm);
 
-  let validData = validation(newName, newEmail, newPsw);
-
-  if(validData) {
-    sendDataTilServer(newName, newEmail, newPsw);
+  try {
+    let response = await fetch("/app/user", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
+        },
+        body: JSON.stringify({
+          name: formData.get("newName"),
+          email: formData.get("newEmail"),
+          password: formData.get("newPsw")
+        })
+      });
+    let data = await response.json();
+    if(data){
+      userResp.innerHTML = "User created with userid " + data[0].id;
+    }
+    else {
+        userResp.innerHTML = "Something went wrong";
+    }
+  } catch(err){
+    console.log(err);
   }
-}
 
-//checks input-data from user
-function validation(name, email, psw){
-  let response = document.getElementById("userResp");
-  if(!nameTest(name)){
-    response.innerHTML = "Name must be at least 2 characters";
-  }
-  else if(!emailTest(email)){
-    response.innerHTML = "Not a valid e-mailadress";
-  }
-  else if(!passwordTest(psw)){
-    response.innerHTML = "Password must be at least 6 characters";
-  }
-  else return true;
-}
-
-function nameTest(name){
-  if(name.length > 1) {
-    return true;
-  }
-}
-
-function emailTest(email){
-  let regex = /^[^\s]+@[^\s]+\.[^\s]+$/;
-  return regex.test(email);
-}
-
-function passwordTest(psw){
-  if(psw.length > 5){
-    return true;
-  }
-}
-
-function sendDataTilServer(name, email, password){
-  fetch("/app/user", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json; charset=utf-8",
-    },
-    body: JSON.stringify({
-      name: name,
-      email: email,
-      password: password
-    })
-  }).then(newUserResponse).then(newUserDisplay).catch(newUserError);
-}
-
-function newUserResponse(response){
-  return response.json();
-}
-
-function newUserDisplay(data){
-  let res = document.getElementById("userResp");
-  if(typeof data === 'object'){
-    res.innerHTML = "User created with userid " + data["id"];
-  }
-  else {
-    res.innerHTML = data;
-  }
-}
-
-function newUserError(err){
-  res.innerHTML = "Something went wrong. Errormessage: " + err;
 }
 
 //-------------- Login user------------
-let btnLogin = document.getElementById("login");
-btnLogin.onclick = loginData;
+/*let btnLogin = document.getElementById("login");
+btnLogin.onclick = loginUser;
 
-function loginData() {
-  let userEmail = document.getElementById("userEmail").value;
-  let userPsw = document.getElementById("userPsw").value;
-  logInUser(userEmail, userPsw);
-}
+async function logInUser(email, password){
 
-function logInUser(email, password){
+  let email = document.getElementById("userEmail").value;
+  let password = document.getElementById("userPsw").value;
+
   fetch("/app/login", {
     method: "POST",
     headers: {
@@ -102,6 +55,8 @@ function logInUser(email, password){
     })
   }).then(loginResponse).then(loginDisplay).catch(loginError);
 }
+
+//sql'en må sjekke om tilsvarende bruker finnes i databasen og returnere noe
 
 function loginResponse(response){
   return response.json();
@@ -117,4 +72,50 @@ function loginDisplay(data){
 
 function loginError(err){
   console.log(err);
+}*/
+
+//---------- get all users -------------
+let btnDb = document.getElementById("dbdata");
+btnDb.onclick = dbData;
+
+async function dbData(){
+
+  try {
+    let url = 'app/allUsers';
+    let response = await fetch(url);
+    let data = await response.json(); console.log(data);
+
+  } catch(err){
+    console.log(err);
+  }
+
+}
+
+// --------- delete user ------------
+let btnDel = document.getElementById("delete");
+btnDel.onclick = delUser;
+let deleteResp = document.getElementById("deleteResp");
+
+///todo sjekke admin? eller bare vise slette-knapp for admin-brukere?
+async function delUser(){
+  let id = document.getElementById("userId").value;
+
+  try {
+    let response = await fetch(`app/deleteUser/${id}/`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+      }
+    });
+
+    let data = await response.json();
+    if(data.length === 1){
+      deleteResp.innerHTML = "User " + data[0].id + " deleted";
+    }
+    else deleteResp.innerHTML = "Something went wrong..";
+
+  } catch(err){
+    console.log(err);
+  }
+
 }
