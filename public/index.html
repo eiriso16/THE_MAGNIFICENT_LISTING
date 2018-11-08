@@ -7,13 +7,17 @@
 
 <body>
   <h3>Things todo</h3>
-
-  <div>
-    <span>New user </span>
-    <input id="newName" type="text" placeholder="Name">
-    <input id="newEmail" type="text" placeholder="Email address">
-    <input id="newPsw" type="password" placeholder="Password">
+<!-- /// todo gjøre om til templates
+all inputfields requred, email type email
+input in form, submit when all ok-->
+<div>
+  <span>New user </span>
+  <form id="newUser">
+    <input id="newName" name="newName" type="text" placeholder="Name" required>
+    <input id="newEmail" name="newEmail" type="email" placeholder="Email address" required>
+    <input id="newPsw"  name="newPsw" type="password" placeholder="Password" required>
     <button id="newBtn">Create user</button>
+  </form>
     <p id="userResp"></p>
   </div>
 
@@ -22,8 +26,28 @@
     <input id="userEmail" type="text" placeholder="email">
     <input id="userPsw" type="password" placeholder="password">
     <button id="login">Log in</button>
+    <button id="logout">Log out</button>
+	<button id="auth">Check auth</button>
+
     <p id="loginResp"></p>
   </div>
+
+  <div>
+    <span>Delete user</span>
+    <input id="userId" type="text" placeholder="id">
+    <button id="delete">Delete user</button>
+    <p id="deleteResp"></p>
+  </div>
+
+  <div>
+    <span>Teste å hente db-data</span>
+    <button id="dbdata">Hent data</button>
+  </div>
+    
+    <div>
+    <input id="listName" type="text" placeholder="List Name">
+    <button id="listBtn">Create list</button>
+    </div>
 
   <script src="js/app.js" type="text/javascript"></script>
 </body>

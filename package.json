@@ -1,11 +1,13 @@
 {
   "name": "api-design",
   "version": "1.0.0",
-  "description": "",
+  "description": "Medium Difficulty Group Assignment Appdevelopment",
   "main": "api.js",
   "dependencies": {
+    "body-parse": "^0.1.0",
     "body-parser": "^1.18.3",
-    "express": "^4.16.3"
+    "express": "^4.16.4",
+    "pg": "^7.6.1"
   },
   "devDependencies": {},
   "scripts": {
