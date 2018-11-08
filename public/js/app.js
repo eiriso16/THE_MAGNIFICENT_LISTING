@@ -63,6 +63,7 @@ async function createList(){
         
     if (data.length === 1){
         listResp.innerHTML = "List created with id " + data[0].id;
+        localStorage.setItem("listId",data[0].id);
     }
         else{
             listResp.innerHTML = "Something went wrong";
@@ -71,6 +72,45 @@ async function createList(){
   } catch(err){
     console.log(err);
   }
+}
+
+//-----------Add Item-------------------
+
+let btnAddItem = document.getElementById("itemBtn");
+btnAddItem.onclick = addItem;
+
+async function addItem(){
+    
+    let item = document.getElementById("listItem").value;
+    
+    try {
+        
+        let url = 'app/list/item'; //lage ny
+    let response = await fetch(url,{
+    method:"POST",
+    headers:{
+    "Content-Type": "application/json; charset=utf-8"
+    },
+    body: JSON.stringify({
+        itemName: item,
+        listId: localStorage.getItem("listId"),
+        itemId: 1///todo fjerne hardkoding
+      })                           
+    });
+    let data = await response.json(); console.log(data);
+
+    let itemResp = document.getElementById("itemResp");    
+        
+    if (data.length === 1){
+        itemResp.innerHTML = "Item added to List";
+    }
+        else{
+            itemResp.innerHTML = "Something went wrong";
+        }
+    }
+    catch(err){
+        
+    }
 }
 
 //---------- get all users -------------
