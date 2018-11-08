@@ -21,14 +21,15 @@ router.get('/app/allUsers',async function(req,res,next){
 //opprette ny bruker i databasen
 router.post('/app/user', async function(req,res,next){
   /// todo password-hashing
-  let userName = req.body.name;
+  let username = req.body.username;
+  let fullName = req.body.name;
   let userEmail = req.body.email;
   let userPsw = req.body.password;
 
   /// todo bare returnere id?
-  let sql =  `insert into public."Users" ("name", "email", "password")
-   values('${userName}', '${userEmail}', '${userPsw}')
-   returning "id", "name", "email", "password";`;
+  let sql =  `insert into public."Users" ("username","name", "email", "password")
+   values('${username}', '${fullName}', '${userEmail}', '${userPsw}')
+   returning "id", "username", "name", "email", "password";`;
 
   try {
     let data = await db.runQuery(sql);

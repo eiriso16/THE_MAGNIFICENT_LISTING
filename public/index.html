@@ -6,19 +6,33 @@
 </head>
 
 <body>
-  <h3>Things todo</h3>
+
 <!-- /// todo gjøre om til templates
 all inputfields requred, email type email
 input in form, submit when all ok-->
 <div>
-  <span>New user </span>
-  <form id="newUser">
-    <input id="newName" name="newName" type="text" placeholder="Name" required>
-    <input id="newEmail" name="newEmail" type="email" placeholder="Email address" required>
-    <input id="newPsw"  name="newPsw" type="password" placeholder="Password" required>
+  <form id=”newUser”>
+            <div class="container">
+                <h1>Sign Up</h1>
+                <p>Please fill in this form to create an account.</p>
+                <hr>
+
+                <label for="newUsername"><b>Username</b></label>
+                <input type="text" placeholder="Username" name="newUsername" id="newUsername" required>	
+
+                <label for="newName"><b>Name</b></label>
+                <input type="text" placeholder="Name" name="newName" id="newName" required>	
+
+                <label for="newEmail"><b>Email</b></label>
+                <input type="email" placeholder="Enter Email" name="newEmail" id="newEmail" required>
+
+                <label for="newPsw"><b>Password</b></label>
+                <input type="password" placeholder="Enter Password" name="newPsw" id="newPsw" required>
     <button id="newBtn">Create user</button>
+      </div>
   </form>
     <p id="userResp"></p>
+      
   </div>
 
   <div>
@@ -47,6 +61,8 @@ input in form, submit when all ok-->
     <div>
     <input id="listName" type="text" placeholder="List Name">
     <button id="listBtn">Create list</button>
+        
+        <p id="listResp"></p>
     </div>
 
   <script src="js/app.js" type="text/javascript"></script>

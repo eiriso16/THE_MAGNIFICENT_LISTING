@@ -17,12 +17,14 @@ async function createUser(evt){
           "Content-Type": "application/json; charset=utf-8",
         },
         body: JSON.stringify({
+          username: formData.get("newUsername"),
           name: formData.get("newName"),
           email: formData.get("newEmail"),
           password: formData.get("newPsw")
         })
       });
     let data = await response.json();
+      console.log(data);
     if(data){
       userResp.innerHTML = "User created with userid " + data[0].id;
     }
@@ -57,6 +59,15 @@ async function createList(){
     });
     let data = await response.json(); console.log(data);
 
+    let listResp = document.getElementById("listResp");    
+        
+    if (data.length === 1){
+        listResp.innerHTML = "List created with id " + data[0].id;
+    }
+        else{
+            listResp.innerHTML = "Something went wrong";
+        }
+        
   } catch(err){
     console.log(err);
   }
