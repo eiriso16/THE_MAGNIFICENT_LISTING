@@ -2,37 +2,34 @@ const express = require('express')
 const router = express.Router();
 const db = require("./db.js");
 
-//hente alle brukere fra databasen
+//---------- hente alle brukere ----------
 router.get('/app/allUsers',async function(req,res,next){
-  let sql = 'SELECT * FROM public."Users";';
+  let sql = 'select * from public."Users";';
 
   try {
     let users = await db.runQuery(sql);
-    //console.log('innhold fra select-query i users.js: ' + JSON.stringify(users));
     res.status(200).json(JSON.stringify(users));
-    //må ha enten next() eller end() ???
   }
-
   catch(err) {
     res.status(500).json({error: err});
   }
 });
 
-//opprette ny bruker i databasen
+//---------- opprette ny bruker ----------
 router.post('/app/user', async function(req,res,next){
-  /// todo password-hashing
-  let userName = req.body.name;
+  /// todo password-hashing?
+  let username = req.body.username;
+  let fullName = req.body.name;
   let userEmail = req.body.email;
   let userPsw = req.body.password;
 
-  /// todo bare returnere id?
-  let sql =  `insert into public."Users" ("name", "email", "password")
-   values('${userName}', '${userEmail}', '${userPsw}')
-   returning "id", "name", "email", "password";`;
+  let sql =  `insert into public."Users" ("username","name", "email", "password")
+   values('${username}', '${fullName}', '${userEmail}', '${userPsw}')
+   returning "id", "username", "name", "email", "role";`;
 
   try {
     let data = await db.runQuery(sql);
-    res.status(200).json(data); //hvorfor er dette et array?
+    res.status(200).json(data);
   }
 
   catch(err) {
@@ -40,7 +37,27 @@ router.post('/app/user', async function(req,res,next){
   }
 });
 
-//slette bruker fra databasen
+//---------- logge inn ----------
+router.post("/app/login", async function(req,res){
+
+  let username = req.body.username;
+  let password = req.body.password;
+
+  let sql = `select id, username, name, email, role from public."Users" where "username" = '${username}'
+   and "password" = '${password}';`
+
+  try {
+	let data = await db.runQuery(sql);
+	res.status(200).json(data);
+	//hva returneres hvis den ikke finner bruker?
+
+  } catch(err){
+	res.status(500).json({error: err});
+  }
+
+});
+
+//---------- slette bruker ----------
 router.delete('/app/deleteUser/:id/', async function(req, res, next){
 
   let id = req.params.id;
@@ -50,10 +67,8 @@ router.delete('/app/deleteUser/:id/', async function(req, res, next){
 
   try {
     let data = await db.runQuery(sql);
-    res.status(200).json(data); //hvorfor er dette et array?
-
+    res.status(200).json(data);
   }
-
   catch(err) {
     res.status(500).json({error: err});
   }

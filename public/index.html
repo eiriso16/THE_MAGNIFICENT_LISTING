@@ -6,26 +6,40 @@
 </head>
 
 <body>
-  <h3>Things todo</h3>
-<!-- /// todo gjøre om til templates
-all inputfields requred, email type email
-input in form, submit when all ok-->
-<div>
-  <span>New user </span>
-  <form id="newUser">
-    <input id="newName" name="newName" type="text" placeholder="Name" required>
-    <input id="newEmail" name="newEmail" type="email" placeholder="Email address" required>
-    <input id="newPsw"  name="newPsw" type="password" placeholder="Password" required>
-    <button id="newBtn">Create user</button>
-  </form>
+
+  <!-- /// todo gjøre om til templates-->
+  <div>
+    <form id="newUser">
+      <div class="container">
+        <h1>Sign Up</h1>
+        <p>Please fill in this form to create an account.</p>
+        <hr>
+
+        <label for="newUsername"><b>Username</b></label>
+        <input type="text" placeholder="Username" name="newUsername" id="newUsername" required>
+
+        <label for="newName"><b>Name</b></label>
+        <input type="text" placeholder="Name" name="newName" id="newName" required>
+
+        <label for="newEmail"><b>Email</b></label>
+        <input type="email" placeholder="Enter Email" name="newEmail" id="newEmail" required>
+
+        <label for="newPsw"><b>Password</b></label>
+        <input type="password" placeholder="Enter Password" name="newPsw" id="newPsw" required>
+        <button id="newBtn">Create user</button>
+      </div>
+    </form>
     <p id="userResp"></p>
+
   </div>
 
   <div>
     <span>Log in</span>
-    <input id="userEmail" type="text" placeholder="email">
+    <input id="userName" type="text" placeholder="username">
     <input id="userPsw" type="password" placeholder="password">
     <button id="login">Log in</button>
+    <button id="logout">Log out</button>
+    <button id="auth">Check auth</button>
     <p id="loginResp"></p>
   </div>
 
@@ -37,8 +51,26 @@ input in form, submit when all ok-->
   </div>
 
   <div>
-    <span>Teste å hente db-data</span>
-    <button id="dbdata">Hent data</button>
+    <form id="createList">
+    <span>create new list</span>
+    <input id="listName" type="text" placeholder="List Name" required>
+    <button id="listBtn">Create list</button>
+    <p id="listResp"></p>
+  </form>
+  </div>
+
+  <div>
+    <div id="myLists"></div>
+    <div id="itemsContainer"></div>
+  </div>
+
+  <div>
+    <form id="addItem">
+    <span>Add item</span>
+    <input id="listItem" type="text" placeholder="Add List Items" required>
+    <button id="itemBtn">Add item</button>
+    <p id="itemResp"></p>
+  </form>
   </div>
 
   <script src="js/app.js" type="text/javascript"></script>
