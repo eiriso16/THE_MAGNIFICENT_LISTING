@@ -39,4 +39,24 @@ router.post('/app/list/item',async function(req,res,next){
   }
 })
 
+//slette liste fra databasen
+router.delete('/app/deleteList/:id/', async function(req, res, next){
+
+  let id = req.params.id;
+
+  let sql = `delete from public."Lists" where id = '${id}'
+  returning id ;`;
+
+  try {
+    let data = await db.runQuery(sql);
+    res.status(200).json(data); //hvorfor er dette et array?
+
+  }
+
+  catch(err) {
+    res.status(500).json({error: err});
+  }
+
+});
+
 module.exports = router;

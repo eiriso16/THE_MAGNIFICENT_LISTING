@@ -159,6 +159,34 @@ async function delUser(){
 
 }
 
+// -----------delete list--------------
+let btnDelList = document.getElementById("btnDelList");
+btnDelList.onclick = deleteList;
+let delListResp = document.getElementById("delListResp");
+
+async function deleteList(){
+  let id = document.getElementById("delList").value;
+
+  try {
+    let response = await fetch(`app/deleteList/${id}/`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+      }
+    });
+
+    let data = await response.json();
+    if(data.length === 1){
+      delListResp.innerHTML = "List " + data[0].id + " deleted";
+    }
+    else delListResp.innerHTML = "Something went wrong..";
+
+  } catch(err){ 
+    console.log(err);
+  }
+
+}
+
 //-------------- Login user------------
 let btnLogin = document.getElementById("login");
 btnLogin.onclick = loginUser;

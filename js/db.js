@@ -1,6 +1,6 @@
 const { Client } = require('pg');
 const connectionString = process.env.DATABASE_URL;
-const localConnectionString = 'postgres://dibyhwpyxdtsqk:2e9853a21210046b952b68c2c4c4a639a7320670c095b1a50c965f2ee250f16c@ec2-54-217-236-201.eu-west-1.compute.amazonaws.com:5432/dasffosd9vgdh9';
+const localConnectionString = 'postgres://pohhgdgduosdgi:c6612987183717a2e99d6652a12dddcf5adde3f936f9d04ea1fb53dff51e34c1@ec2-54-217-236-201.eu-west-1.compute.amazonaws.com:5432/ddejijks57b50h';
 
 const db = {} //må et objekt returneres fra modulen?
 
