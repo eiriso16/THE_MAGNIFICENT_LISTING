@@ -29,7 +29,18 @@ router.post('/app/user', async function(req,res,next){
 
   try {
     let data = await db.runQuery(sql);
-    res.status(200).json(data);
+
+    let err = (db.previousError);
+    if(err){
+      // DB spørringen virket ikke
+      res.status(400).send(err).end();
+    } else{
+      // Ny bruker i databasaen
+        res.status(200).json(data);
+    }
+console.log();
+
+
   }
 
   catch(err) {

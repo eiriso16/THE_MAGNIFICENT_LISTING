@@ -1,10 +1,45 @@
 "use strict"
-
+let authUser = checkAuthentication();
+view();
 //---------create user-----------
-let userForm = document.getElementById("newUser");
-userForm.onsubmit = createUser;
+function view(){
+//  if(!authUser){
+if(!checkAuthentication()){
+    addTemplate("createUserTemplate");
+    let userForm = document.getElementById("newUser");
+    userForm.onsubmit = createUser;
 
- async function createUser(evt){
+  //  addTemplate("loginUserTemplate");
+    let btnLogin = document.getElementById("login");
+    btnLogin.onclick = loginUser;
+  }
+  else {
+    addTemplate("listViewTemplate");
+    let btnDel = document.getElementById("delete");
+    btnDel.onclick = checkRole;
+
+    let listForm = document.getElementById("createList");
+    listForm.onsubmit = createList;
+
+    let itemForm = document.getElementById("addItem");
+    itemForm.onsubmit = addItem;
+
+    let btnDelList = document.getElementById("btnDelList");
+    btnDelList.onclick = deleteList;
+  }
+}
+
+function addTemplate(templId){
+  let container = document.getElementById("container");
+  container.innerHTML = "";
+
+  let templ = document.getElementById(templId);
+  let clone = templ.content.cloneNode(true);
+  container.appendChild(clone);
+
+}
+
+async function createUser(evt){
   evt.preventDefault();
 
   let username = document.getElementById("newUsername").value;
@@ -31,14 +66,14 @@ userForm.onsubmit = createUser;
 
   } catch(err){
     //  userResp.innerHTML = err;
-    userResp.innerHTML = "Something went wrong";
+    userResp.innerHTML = "Something went wrong: " + err;
     console.log(err);
   }
 }
 
 //-------------- Login user------------
-let btnLogin = document.getElementById("login");
-btnLogin.onclick = loginUser;
+//let btnLogin = document.getElementById("login");
+//btnLogin.onclick = loginUser;
 
 async function loginUser(){
   let username = document.getElementById("userName").value;
@@ -62,13 +97,15 @@ async function loginUser(){
     loginRes.innerHTML = "Welcome " + data[0].name;
     localStorage.setItem("user", JSON.stringify(data[0]));
     localStorage.setItem("userId", data[0].id);
-    usersLists();
+    view();
+    //usersLists();
   }
   else {
     loginRes.innerHTML = "User not found";
   }
 }
 
+///todo denne knappen skal bort etterhvert
 let chkAuth = document.getElementById("auth");
 chkAuth.onclick = checkAuthentication;
 
@@ -76,8 +113,12 @@ function checkAuthentication(){
   let userId = localStorage.getItem("userId"); //fjerne??
   let currentList = localStorage.getItem("listId");
   let user =  JSON.parse(localStorage.getItem("user"));
-  console.log("Current user: " + user.name + " current list: " + currentList);
-  //return ??;
+  if(user){
+    console.log("Current user: " + user.name + " current list: " + currentList);
+    return true;
+  }
+  console.log("No user logged in");
+  return false;
 }
 
 let btnLogout = document.getElementById("logout");
@@ -87,6 +128,7 @@ function logOut(){
   localStorage.removeItem("user");
   localStorage.removeItem("userId");
   localStorage.removeItem("listId");
+  view();
 }
 
 //---------- get all users -------------
@@ -104,9 +146,8 @@ async function dbData(){
 }
 
 // --------- delete user ------------
-let btnDel = document.getElementById("delete");
-btnDel.onclick = checkRole;
-let deleteResp = document.getElementById("deleteResp");
+//btnDel.onclick = checkRole;
+//let deleteResp = document.getElementById("deleteResp");
 
 function checkRole(){
   let idToDelete = document.getElementById("userId").value;
@@ -138,8 +179,8 @@ async function delUser(id){
 }
 
 //----------Create List-------------
-let listForm = document.getElementById("createList");
-listForm.onsubmit = createList;
+//let listForm = document.getElementById("createList");
+//listForm.onsubmit = createList;
 
 async function createList(evt){
   evt.preventDefault();
@@ -175,8 +216,8 @@ async function createList(evt){
 }
 
 //-----------Add Item-------------------
-let itemForm = document.getElementById("addItem");
-itemForm.onsubmit = addItem;
+//let itemForm = document.getElementById("addItem");
+//itemForm.onsubmit = addItem;
 
 async function addItem(evt){
   evt.preventDefault();
@@ -212,32 +253,32 @@ async function addItem(evt){
 }
 
 //get users lists
-async function usersLists(){
-  let lists = document.getElementById("myLists");
-  let userId = localStorage.getItem("userId");
+/*async function usersLists(){
+let lists = document.getElementById("myLists");
+let userId = localStorage.getItem("userId");
 
-  try {
-    let response = await fetch(`app/list/${userId}/`);
-    let data = await response.json();  console.log(data);
+try {
+let response = await fetch(`app/list/${userId}/`);
+let data = await response.json();  console.log(data);
 
-    if(data){
-      let span = document.createElement("span");
-      span.innerHTML = "Dine lister";
-      lists.appendChild(span);
+if(data){
+let span = document.createElement("span");
+span.innerHTML = "Dine lister";
+lists.appendChild(span);
 
-      for(let i in data){
-        let div = document.createElement("div");
-        div.id =  data[i].id;
-        div.innerHTML = data[i].name;
-        div.onclick = showList;
-        lists.appendChild(div);
-      }
-    }
-
-  } catch(err){
-    console.log(err);
-  }
+for(let i in data){
+let div = document.createElement("div");
+div.id =  data[i].id;
+div.innerHTML = data[i].name;
+div.onclick = showList;
+lists.appendChild(div);
 }
+}
+
+} catch(err){
+console.log(err);
+}
+}*/
 
 //get list details (items in list)
 async function showList(evt){
@@ -258,6 +299,28 @@ async function showList(evt){
     }
 
   } catch(err) {
+    console.log(err);
+  }
+}
+
+// -----------delete list--------------
+//btnDelList.onclick = deleteList;
+//let delListResp = document.getElementById("delListResp");
+async function deleteList(){
+  let id = document.getElementById("delList").value;
+  try {
+    let response = await fetch(`app/deleteList/${id}/`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+      }
+    });
+    let data = await response.json();
+    if(data.length === 1){
+      delListResp.innerHTML = "List " + data[0].id + " deleted";
+    }
+    else delListResp.innerHTML = "Something went wrong..";
+  } catch(err){
     console.log(err);
   }
 }

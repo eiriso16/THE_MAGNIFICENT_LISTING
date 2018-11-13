@@ -71,6 +71,20 @@ router.get('/app/list/items/:listid', async function(req,res,next){
 
 });
 
+//---------- delete list ----------
+router.delete('/app/deleteList/:id/', async function(req, res, next){
+  let id = req.params.id;
+  let sql = `delete from public."Lists" where id = '${id}'
+  returning id ;`;
+  try {
+    let data = await db.runQuery(sql);
+    res.status(200).json(data);
+  }
+  catch(err) {
+    res.status(500).json({error: err});
+  }
+});
+
 //---------- delete all items in list -----------
 router.delete('/app/list/deleteItems/:listid', async function(req,res,next){
 
