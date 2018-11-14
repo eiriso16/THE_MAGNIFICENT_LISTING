@@ -85,6 +85,23 @@ router.delete('/app/deleteList/:id/', async function(req, res, next){
   }
 });
 
+//---------- delete item in list ----------
+router.delete('/app/list/deleteItem/:listId/:itemName', async function(req, res, next){
+
+let listId = req.params.listId;
+let itemName = req.params.itemName;
+let sql = `delete from public."Items" where listid = '${listId}' and name = '${itemName}';`;
+
+try {
+  let data = await db.runQuery(sql);
+  res.status(200).json(data);
+}
+catch(err) {
+  res.status(500).json({error: err});
+}
+
+});
+
 //---------- delete all items in list -----------
 router.delete('/app/list/deleteItems/:listid', async function(req,res,next){
 
