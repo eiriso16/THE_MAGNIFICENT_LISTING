@@ -23,6 +23,12 @@ ENDPOINT: /app/deleteUser/:id/
 PARAMS ??
 RESPONSE (json): {"id:" integer}
 
+/* */
+METHOD: POST
+ENDPONT: /app/user/updateUser
+BODY (json): {"userid": string, "column": string, "value": string}
+RESPONSE (json):
+
 /* ------------------------- Lists ------------------------ */
 
 /* create list */
@@ -44,3 +50,7 @@ ENDPOINT: /app/list/items/:listid
 /* delete all items in list*/
 METHOD: DELETE
 ENDPOINT: /app/list/deleteItems/:listid
+
+/* delte list */
+METHOD: DELETE
+ENDPOINT: /app/deleteUser/:id/

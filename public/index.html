@@ -7,13 +7,14 @@
 
 <body>
   <div id="container"></div>
-  <button id="logout">Log out</button>
-  <button id="auth">Check auth</button>
+  <p id="userResp"></p>
+  <p id="loginResp"></p>
+  <p id="deleteResp"></p>
 
   <!-- /// todo gjøre om til templates-->
-  <template id="createUserTemplate">
+  <template id="userTemplate">
     <form id="newUser">
-      <div class="container">
+      <div>
         <h1>Sign Up</h1>
         <p>Please fill in this form to create an account.</p>
         <hr>
@@ -33,56 +34,68 @@
       </div>
     </form>
 
-  <p id="userResp"></p>
-
-
     <span>Log in</span>
     <input id="userName" type="text" placeholder="username">
     <input id="userPsw" type="password" placeholder="password">
     <button id="login">Log in</button>
   </template>
-  <p id="loginResp"></p>
-    <p id="deleteResp"></p>
 
-<template id="listViewTemplate">
-  <div>
+  <template id="listViewTemplate">
+    <div id="myLists"></div>
+    <div>
+      <form id="createList">
+        <span>create new list</span>
+        <input id="listName" type="text" placeholder="List Name" required>
+        <button id="listBtn">Create list</button>
+        <p id="listResp"></p>
+      </form>
+    </div>
+  </template>
+
+  <template id="listDetailsTemplate">
+    <div>
+      <div id="currentList"></div>
+      <div id="itemsContainer"></div>
+    </div>
+    <div>
+      <form id="addItem">
+        <span>Add item</span>
+        <input id="listItem" type="text" placeholder="Add List Items" required>
+        <button id="itemBtn">Add item</button>
+        <p id="itemResp"></p>
+      </form>
+    </div>
+
+    <div>
+      <button id="btnDelList">Delete List</button>
+      <p id="delListResp"></p>
+    </div>
+  </template>
+
+  <template id="updateUserTemplate">
+    <div>Update user</div>
+    <div id="updateUser"></div>
+    <div id="updUserSelect">
+      <span>What do you want to update?</span>
+      <div id="name">Name</div>
+      <div id="username">Username</div>
+      <div id="email">Emailadress</div>
+      <div id="password">Password</div>
+    </div>
+
+  </template>
+
+  <div id="menu">
+    <div id="userInfo"></div>
     <span>Delete user</span>
     <input id="userId" type="text" placeholder="id">
-    <button id="delete">Delete user</button>
-
+    <button id="delete">Delete account</button>
+    <button id="logout">Log out</button>
+    <button id="auth">Check auth</button>
+    <button id="allLists">Back to lists</button>
+    <button id="updUser">Update user</button>
+    <button id="metrics">User metrics</button>
   </div>
-
-  <div>
-    <form id="createList">
-      <span>create new list</span>
-      <input id="listName" type="text" placeholder="List Name" required>
-      <button id="listBtn">Create list</button>
-      <p id="listResp"></p>
-    </form>
-  </div>
-
-  <div>
-    <div id="myLists"></div>
-    <div id="itemsContainer"></div>
-  </div>
-
-  <div>
-    <form id="addItem">
-      <span>Add item</span>
-      <input id="listItem" type="text" placeholder="Add List Items" required>
-      <button id="itemBtn">Add item</button>
-      <p id="itemResp"></p>
-    </form>
-  </div>
-
-  <div>
-<span>Delete List</span>
-<input id="delList" type="text" placeholder="Delete List">
-<button id="btnDelList">Delete List</button>
-<p id="delListResp"></p>
-</div>
-
-</template>
 
   <script src="js/app.js" type="text/javascript"></script>
 </body>

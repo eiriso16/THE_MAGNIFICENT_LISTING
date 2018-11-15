@@ -86,4 +86,25 @@ router.delete('/app/deleteUser/:id/', async function(req, res, next){
 
 });
 
+//---------- oppdatere bruker ----------
+router.post('/app/user/updateUser', async function(req, res, next){
+
+let userId = req.body.userid;
+let column = req.body.column;
+let newValue = req.body.value;
+
+let sql = `update public."Users" set ${column} = '${newValue}'
+where id = '${userId}';`;
+
+try {
+  let data = await db.runQuery(sql);
+  res.status(200).json(data);
+}
+
+catch(err) {
+  res.status(500).json({error: err});
+}
+
+});
+
 module.exports = router;
