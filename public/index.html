@@ -2,83 +2,102 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="listing.css" rel="stylesheet" />
   <title>Things todo</title>
 </head>
 
 <body>
+  <div id="container"></div>
+  <p id="userResp"></p>
+  <p id="loginResp"></p>
+  <p id="deleteResp"></p>
 
-<!-- /// todo gjøre om til templates
-all inputfields requred, email type email
-input in form, submit when all ok-->
-<div>
-  <form id=”newUser”>
-            <div class="container">
-                <h1>Sign Up</h1>
-                <p>Please fill in this form to create an account.</p>
-                <hr>
+  <!-- /// todo gjøre om til templates-->
+  <template id="userTemplate">
+    <form id="newUser">
+      <div>
+        <h1>Sign Up</h1>
+        <p>Please fill in this form to create an account.</p>
+        <hr>
 
-                <label for="newUsername"><b>Username</b></label>
-                <input type="text" placeholder="Username" name="newUsername" id="newUsername" required>	
+        <label for="newUsername"><b>Username</b></label>
+        <input type="text" placeholder="Username" name="newUsername" id="newUsername" required>
 
-                <label for="newName"><b>Name</b></label>
-                <input type="text" placeholder="Name" name="newName" id="newName" required>	
+        <label for="newName"><b>Name</b></label>
+        <input type="text" placeholder="Name" name="newName" id="newName" required>
 
-                <label for="newEmail"><b>Email</b></label>
-                <input type="email" placeholder="Enter Email" name="newEmail" id="newEmail" required>
+        <label for="newEmail"><b>Email</b></label>
+        <input type="email" placeholder="Enter Email" name="newEmail" id="newEmail" required>
 
-                <label for="newPsw"><b>Password</b></label>
-                <input type="password" placeholder="Enter Password" name="newPsw" id="newPsw" required>
-    <button id="newBtn">Create user</button>
+        <label for="newPsw"><b>Password</b></label>
+        <input type="password" placeholder="Enter Password" name="newPsw" id="newPsw" required>
+        <button id="newBtn">Create user</button>
       </div>
-  </form>
-    <p id="userResp"></p>
-      
-  </div>
+    </form>
 
-  <div>
     <span>Log in</span>
-    <input id="userEmail" type="text" placeholder="email">
+    <input id="userName" type="text" placeholder="username">
     <input id="userPsw" type="password" placeholder="password">
     <button id="login">Log in</button>
-    <button id="logout">Log out</button>
-	<button id="auth">Check auth</button>
+  </template>
 
-    <p id="loginResp"></p>
-  </div>
+  <template id="listViewTemplate">
+    <div id="myLists"></div>
+    <div>
+      <form id="createList">
+        <span>create new list</span>
+        <input id="listName" type="text" placeholder="List Name" required>
+        <button id="listBtn">Create list</button>
+        <p id="listResp"></p>
+      </form>
+    </div>
+  </template>
 
-  <div>
+  <template id="listDetailsTemplate">
+    <div>
+      <div id="currentList"></div>
+      <div id="itemsContainer"></div>
+    </div>
+    <div>
+      <form id="addItem">
+        <span>Add item</span>
+        <input id="listItem" type="text" placeholder="Add List Items" required>
+        <button id="itemBtn">Add item</button>
+        <p id="itemResp"></p>
+      </form>
+    </div>
+
+    <div>
+      <button id="btnDelList">Delete List</button>
+      <p id="delListResp"></p>
+    </div>
+  </template>
+
+  <template id="updateUserTemplate">
+    <div>Update user</div>
+    <div id="updateUser"></div>
+    <div id="updUserSelect">
+      <span>What do you want to update?</span>
+      <div id="name">Name</div>
+      <div id="username">Username</div>
+      <div id="email">Emailadress</div>
+      <div id="password">Password</div>
+    </div>
+
+  </template>
+
+  <div id="menu">
+    <div id="userInfo"></div>
     <span>Delete user</span>
     <input id="userId" type="text" placeholder="id">
-    <button id="delete">Delete user</button>
-    <p id="deleteResp"></p>
+    <button id="delete">Delete account</button>
+    <button id="logout">Log out</button>
+    <button id="auth">Check auth</button>
+    <button id="allLists">Back to lists</button>
+    <button id="updUser">Update user</button>
+    <button id="metrics">User metrics</button>
   </div>
 
-  <div>
-    <span>Teste å hente db-data</span>
-    <button id="dbdata">Hent data</button>
-  </div>
-    
-    <div>
-    <input id="listName" type="text" placeholder="List Name">
-    <button id="listBtn">Create list</button>
-        
-        <p id="listResp"></p>
-    </div>
-
-    <div>
-    <input id="listItem" type="text" placeholder="Add List Items">
-    <button id="itemBtn">Add item</button>
-        
-        <p id="itemResp"></p>
-    </div>
-    
-    <div>
-    <span>Delete List</span>
-    <input id="delList" type="text" placeholder="Delete List">
-    <button id="btnDelList">Delete List</button>
-    <p id="delListResp"></p>
-    </div>
-    
   <script src="js/app.js" type="text/javascript"></script>
 </body>
 </html>
