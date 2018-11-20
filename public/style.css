@@ -6,15 +6,6 @@
         background-size: cover;
     }
 
-    /*input {
-            width: 70%;
-            height: 30px;
-            font-size: 14px;
-            margin-bottom: 20px;
-            background-color: #ffffff;
-            border-radius: 4px;
-    }*/
-
     * {
         box-sizing: border-box;
     }
@@ -23,6 +14,10 @@
       margin: 0;
     }
 
+/*In case elements inside login and signup would flow outside of its own box*/
+    .cssWrap {
+        overflow:hidden;
+    }
 
     /* Create two equal columns that floats next to each other */
     .loginDiv {
@@ -32,9 +27,9 @@
         text-align: center;
         background-color: rgba(52, 73, 94, 0.7);
         border-radius: 5px;
-        margin: 0 auto;
         margin-top: 100px;
         margin-left: 60px;
+        margin-right:5px;
     }
         
     .signupDiv {
@@ -44,9 +39,9 @@
         text-align: center;
         background-color: rgba(52, 73, 94, 0.7);
         border-radius: 5px;
-        margin: 0 auto;
         margin-top: 100px;
         margin-right: 60px;
+        margin-left:5px;
     }
 
     /* Clear floats after the columns */
@@ -57,7 +52,7 @@
     }
 
     /* Responsive layout - makes the three columns stack on top of each other instead of next to each other */
-    @media screen and (max-width:600px) {
+    @media screen and (max-width:650px) {
         .loginDiv {
             width: 75%;
             float: center;
@@ -97,6 +92,10 @@
       border: none;
       border-radius: 15px;
       box-shadow: 0 3px #838383;
+      margin-right: 5px;
+      margin-left: 5px;
+      margin-top: 5px;
+      margin-bottom: 5px;
     }
 
     .cssBtn:hover {
@@ -311,6 +310,52 @@
         color:gray;
     }
 
+/*Inside of item box, tag etc*/
+    .itemlistName {
+
+        font-size: 20px;
+        margin-left:5px;
+        margin-right:1px;
+    }
+
+    .itembox {
+        transform: scale(2);
+        margin: 10px;
+    }
+
+    .itemTag {
+        font-size: 12px;
+        font-style: italic;
+        align-self: center;
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+
+    .itemlistUpd {
+        float:right;
+        align-content:center;
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+
+    .itemlistImp {
+        float:right;
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+
+    .itemDeadl {
+        float:right;
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+
+    .itemlistDel {
+        float:right;
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+
 /*Input field css - Settings*/
     #newVal {
         width: 70%;
@@ -328,7 +373,7 @@
         font-size: 15px;
     }
 
-    /*Buttons in settings*/
+/*Buttons in settings*/
     .settingBtn{
       display: inline-block;
       padding: 7px 20px;

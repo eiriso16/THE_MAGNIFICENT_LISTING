@@ -7,6 +7,7 @@
 </head>
 
 <body>
+<!-- Meny dropdown -->
   <div class="dropdown" style="float:right;">
     <button class="dropbtn">Menu</button>
     <div class="dropdown-content">
@@ -28,6 +29,7 @@
     </div>
   </div>
     
+<!-- User responses -->
   <div id="container"></div>
   <p id="userResponse"></p>
   <p id="userResp"></p>
@@ -36,42 +38,44 @@
 
   <!-- /// todo gjøre om til templates-->
    
-
+<!-- Log in -->
   <template id="userTemplate">
-    <form id="newUser">
-      <div class=signupDiv>
-        <h1 style="color:floralwhite;">Sign Up</h1>
-        <p style="color:floralwhite;">Please fill in this form to create an account.</p>
-        <hr>
+    <div id="cssWrap">
+        <div class="loginDiv">
+            <h1 style="color:floralwhite;">Login</h1>
+            <p style="color:floralwhite;">Please fill in this form to log in.</p>
+            <hr>
+
+            <input id="userName" type="text" placeholder=" Username">
+            <br>
+            <input id="userPsw" type="password" placeholder=" Password">
+            <br>
+            <button id="login" class="cssBtn">Log in</button>
+      </div>
         
-        <input type="text" placeholder=" Username" name="newUsername" id="newUsername" required>
-          <br>
-        <input type="text" placeholder=" Name" name="newName" id="newName" required>
-          <br>
-        <input type="email" placeholder=" Enter Email" name="newEmail" id="newEmail" required>
-          <br>
-        <input type="password" placeholder=" Enter Password" name="newPsw" id="newPsw" required>
-          <br>
-        <button id="newBtn" class="cssBtn">Create user</button>
-      </div>
-    </form>
-      <div class="loginDiv">
-        <h1 style="color:floralwhite;">Login</h1>
-        <p style="color:floralwhite;">Please fill in this form to log in.</p>
-        <hr>
-          
-        <input id="userName" type="text" placeholder=" Username">
-        <br>
-        <input id="userPsw" type="password" placeholder=" Password">
-        <br>
-        <button id="login" class="cssBtn">Log in</button>
-      </div>
+<!-- Sign up -->
+        <form id="newUser">
+          <div class=signupDiv>
+            <h1 style="color:floralwhite;">Sign Up</h1>
+            <p style="color:floralwhite;">Please fill in this form to create an account.</p>
+            <hr>
+
+            <input type="text" placeholder=" Username" name="newUsername" id="newUsername" required>
+              <br>
+            <input type="text" placeholder=" Name" name="newName" id="newName" required>
+              <br>
+            <input type="email" placeholder=" Enter Email" name="newEmail" id="newEmail" required>
+              <br>
+            <input type="password" placeholder=" Enter Password" name="newPsw" id="newPsw" required>
+              <br>
+            <button id="newBtn" class="cssBtn">Create user</button>
+          </div>
+        </form>
+    </div>
   </template>
 
-
-
+<!-- Lists and making them -->
   <template id="listViewTemplate">
-
     <div>
       <form id="createList">
         <div id="myLists"></div>
@@ -90,28 +94,31 @@
 
   <template id="listDetailsTemplate">
       
-    <div>
-      <div id="currentList"></div>
-      <div id="itemsContainer"></div>
+<!-- Delete and Edit name button -->
+    <div align="left">
+        <br>
+        <button id="btnDelList"  class="cssBtn">Delete list</button>
+        <button id="btnUpdList" class="cssBtn">Edit list name</button>
+        <p id="delListResp"></p>
     </div>
       
+<!-- Add item to list-->  
     <div>
       <form id="addItem">
         <span><br></span>
         <input id="listItem" type="text" placeholder=" Add List Items" required>
-        
         <button id="itemBtn"  class="cssBtn">Add item</button>
         <br>
         <p id="itemResp"></p>
       </form>
     </div>
-
-    <div align="center">
-        <br>
-      <button id="btnDelList"  class="cssBtn">Delete List</button>
-      <button id="btnUpdList" class="cssBtn">Edit Listname</button>
-      <p id="delListResp"></p>
+      
+<!-- Show inside of list (aka items) --> 
+    <div>
+      <div id="currentList"></div>
+      <div id="itemsContainer"></div>
     </div>
+      
  </template>
 
   <template id="updateUserTemplate"><br>

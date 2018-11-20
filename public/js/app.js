@@ -413,10 +413,12 @@ async function showItems(){
         let label = document.createElement("label");
         label.setAttribute("for", data[i].name);
         label.innerHTML = data[i].name;
+        label.classList.add("itemlistName");
 
         let tagView = document.createElement("span");
         tagView.id = "tagView";
         tagView.innerHTML = data[i].tag;
+        tagView.classList.add("itemTag");
 
         let checkBox = document.createElement("input");
         checkBox.type = "checkbox";
@@ -425,36 +427,45 @@ async function showItems(){
           checkBox.checked = true;
           checkCounter++;
         }
+        checkBox.classList.add("itemBox");
         checkBox.onclick = setChecked;
 
         let span = document.createElement("span");
         span.innerHTML = "x ";
         span.id = data[i].name;
+        span.classList.add("itemlistDel");
         span.onclick = deleteItem;
 
         let update = document.createElement("span");
         update.innerHTML = "Update Tags ";
         update.id = data[i].name;
+        update.classList.add("itemlistUpd");
         update.onclick = itemDetails;
 
         let importance = document.createElement("span");
         importance.innerHTML = "Set Importance ";
         importance.id = data[i].name;
+        importance.classList.add("itemlistImp");
         importance.onclick = setImportance;
 
         let deadline = document.createElement("span");
         deadline.innerHTML = "Set Deadline ";
         deadline.id = data[i].name;
         deadline.title = data[i].duedate;
+        deadline.classList.add("itemDeadl");
         deadline.onclick = setDeadline;
 
         div.appendChild(label);
-        div.appendChild(tagView);
         div.appendChild(checkBox);
+          
+        div.appendChild(tagView);
+        
         div.appendChild(span);
-        div.appendChild(update);
-        div.appendChild(importance);
         div.appendChild(deadline);
+        div.appendChild(importance);
+        div.appendChild(update);
+        
+        
         itemsContainer.appendChild(div);
       }
 
