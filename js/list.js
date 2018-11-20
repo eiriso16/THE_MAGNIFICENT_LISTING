@@ -118,23 +118,4 @@ router.delete('/app/list/deleteItems/:listid', async function(req,res,next){
 
 });
 
-//---------------update item-------------------
-router.post('/app/list/item/updateItem', async function(req,res,next){
-    let listId = req.body.listid;
-    let itemName = req.body.name;
-    let column = req.body.column;
-    let newValue = req.body.newvalue;
-    
-    let sql = `update public."Items" set ${column} = '${newValue}' where listid = '${listId}' and name = '${itemName}';`;
-    
-try {
-    let data = await db.runQuery(sql);
-    res.status(200).json(data);
-  }
-  catch(err) {
-    res.status(500).json({error: err});
-  }
-});
-
-
 module.exports = router;

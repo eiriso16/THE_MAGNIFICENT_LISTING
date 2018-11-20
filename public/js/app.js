@@ -152,6 +152,7 @@ function updUserColumn(evt){
   let label = document.createElement("label");
   label.setAttribute("for", column);
   label.innerHTML = "Set new " + column;
+  label.classList.add ("settingInf");
   update.appendChild(label);
 
   let inp = document.createElement("input");
@@ -160,10 +161,12 @@ function updUserColumn(evt){
   inp.id = "test";
   update.appendChild(inp);
 
+    
   let btn = document.createElement("button");
-  btn.innerHTML = "update";
+  btn.innerHTML = "Update";
   update.appendChild(btn);
   btn.id = column;
+  btn.classList.add("settingBtn");
   btn.onclick = updateUser;
 }
 
@@ -318,7 +321,8 @@ async function usersLists(){
     lists.appendChild(span);
 
     if(data.length>0){
-      span.innerHTML = "Your lists";
+      span.innerHTML = "YOUR LISTS";
+      span.id = ("listHeader");
 
       for(let i in data){
         let div = document.createElement("div");
@@ -390,7 +394,7 @@ async function showItems(){
         checkBox.onclick = setChecked;
 
         let span = document.createElement("span");
-        span.innerHTML = "x ";
+        span.innerHTML = "X ";
         span.id = data[i].name;
         span.onclick = deleteItem;
           
