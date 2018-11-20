@@ -4,6 +4,7 @@
   "description": "",
   "main": "api.js",
   "dependencies": {
+    "bcrypt": "^3.0.2",
     "body-parser": "^1.18.3",
     "express": "^4.16.3",
     "pg": "^7.5.0"

@@ -1,4 +1,13 @@
-/* --------------------- Users ------------------ */
+/* --------------------- Auth ------------------ */
+
+/* login user */
+METHOD: GET
+ENDPOINT: /app/authenticate
+BODY (json): {"email": string, "password": string}
+RESPONSE (json): {"id": integer, "username": string, "name": string, "email": string, "role": string}
+
+
+/* --------------------- User ------------------ */
 
 /* create user*/
 METHOD: POST
@@ -6,30 +15,19 @@ ENDPOINT: /app/user
 BODY (json): {"name": string, "email": string, "password": string}
 RESPONSE (json): {"id": integer, "name": string, "email": string}
 
-/* login user */
-METHOD: POST
-ENDPOINT: /app/login
-BODY (json): {"email": string, "password": string}
-RESPONSE (json): {user} //hva er riktig retur her?
-
-/* get all users */
-METHOD: GET
-ENDPOINT: /app/allUsers
-RESPONSE (json): array with user-objects
-
 /* delete user */
 METHOD: DELETE
 ENDPOINT: /app/deleteUser/:id/
 PARAMS ??
 RESPONSE (json): {"id:" integer}
 
-/* */
+/* update user */
 METHOD: POST
 ENDPONT: /app/user/updateUser
 BODY (json): {"userid": string, "column": string, "value": string}
 RESPONSE (json):
 
-/* ------------------------- Lists ------------------------ */
+/* ------------------------- List ------------------------ */
 
 /* create list */
 METHOD: POST
