@@ -116,7 +116,6 @@
         padding: 16px;
         font-size: 16px;
         cursor: pointer;
-        
     }
 
     .dropdown {
@@ -154,7 +153,7 @@
         background-color: #b08686;
     }
 
-    /*Visuals of the menu buttons*/
+/*Visuals of the menu buttons*/
     button[id="allLists"], button[id="updUser"], button[id="logout"] {
         background-color: #f9f9f9;
         border: none;
@@ -167,7 +166,7 @@
         cursor: pointer;
     }
 
-    /*Create list*/
+/*Create list*/
     #createList {
         float: center;
         width: 90%;
@@ -179,7 +178,7 @@
         margin-top: 50px;
 }
 
-    /*List response text*/
+/*List response text*/
     #listResp, #userResp, #deleteResp {
         color: black;
         text-align: center;
@@ -187,7 +186,7 @@
         text-shadow: 3px 2px #b08686;
     }
 
-   /*Add new item*/
+/*Add new item*/
     #addItem {
         float: center;
         width: 90%;
@@ -198,7 +197,7 @@
         margin: 0 auto;
         margin-top: 50px;
 }
-    /*List items input field*/
+/*List items input field*/
     input[id="listItem"] {
         width: 70%;
         height: 30px;
@@ -208,7 +207,7 @@
         border-radius: 4px;
     }
 
-    /*CSS for the inside of updateUser + settings title*/
+/*CSS for the inside of updateUser + settings title*/
     #updateUser {
         float: center;
         width: 90%;
@@ -221,7 +220,7 @@
         margin-top: 50px;
     }
 
-    /*The style of the settings page*/
+/*The style of the settings page*/
     #updUserSelect {
         float: center;
         width: 90%;
@@ -234,12 +233,12 @@
         margin-top: 50px;
     }
 
-    /*Text css for name, username, email and password in user update*/
+/*Text css for name, username, email and password in user update*/
     #chooseUpdate {
         text-decoration-line: underline;
     }
 
-    /*When text is hovered over, text color changes*/  
+/*When text is hovered over, text color changes*/  
     .settings:hover {
         color: #b08686;
         text-decoration-line: underline;
@@ -247,7 +246,7 @@
     }
 
 
-    /*The css for the names of lists*/
+/*The css for the names of lists*/
     .listedLists {
         float: center;
         width: 70%;
@@ -260,14 +259,14 @@
         margin-top: 10px;
     }
 
-    /*Header for lists "your lists"*/
+/*Header for lists "your lists"*/
     #listHeader {
         text-align: center;
         color: floralwhite;
         font-size: 50px;
     }
 
-    /*The css for listed items*/
+/*The css for listed items*/
     .listedItems {
         float: center;
         width: 90%;
@@ -291,12 +290,29 @@
         text-shadow: 2px 1px #b08686;
     }
 
-    .listedItems:nth-child(odd) {
-        background: rgba(0,0,56,0.3);
+/*Css for importance level, normal, red, yellow, green*/
+    .importance0 {
+        background-color: rgba(52, 73, 94, 0.5);
+        color:floralwhite;
     }
 
-    /*Input field css - Settings*/
-    #test {
+    .importance1 {
+        background-color: rgba(245, 15, 15, 0.5);
+        color:floralwhite;
+    }
+
+    .importance2 {
+        background-color: rgba(248, 245, 16, 0.5);
+        color:grey;
+    }
+
+    .importance3 {
+        background-color: rgba(105, 248, 16, 0.5);
+        color:gray;
+    }
+
+/*Input field css - Settings*/
+    #newVal {
         width: 70%;
         height: 30px;
         font-size: 14px;
@@ -306,7 +322,7 @@
         border-radius: 4px;
     }
 
-    /*Teksten foran input field - Settings*/
+/*Teksten foran input field - Settings*/
     .settingInf{
         color: floralwhite;
         font-size: 15px;
