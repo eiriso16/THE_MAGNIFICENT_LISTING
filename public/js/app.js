@@ -17,9 +17,6 @@ function view(){
   else {
     addTemplate("listViewTemplate");
 
-    let btnDel = document.getElementById("delete");
-    btnDel.onclick = deleteUser;
-
     let listForm = document.getElementById("createList");
     listForm.onsubmit = createList;
     menu.style.display = "";
@@ -135,6 +132,9 @@ function updateUserInfo(){
   addTemplate("updateUserTemplate");
   let upd = document.getElementById("updUserSelect");
   upd.onclick = updUserColumn;
+    
+      let btnDel = document.getElementById("delete");
+    btnDel.onclick = deleteUser;
 }
 
 function updUserColumn(evt){

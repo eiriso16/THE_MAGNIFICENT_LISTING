@@ -51,7 +51,7 @@
         clear: both;
     }
 
-    /* Responsive layout - makes the three columns stack on top of each other instead of next to each other */
+    /* Responsive layout - makes the two columns stack on top of each other instead of next to each other */
     @media screen and (max-width:650px) {
         .loginDiv {
             width: 75%;
@@ -85,7 +85,6 @@
       font-size: 15px;
       cursor: pointer;
       text-align: center;
-      text-decoration: none;
       outline: none;
       color: #fff;
       background-color: #BC8F8F;
@@ -108,7 +107,36 @@
       transform: translateY(4px);
     }
 
-    /*Drop down menu, floating right*/
+/*The CSS of the delete button, since I wanted it red*/
+    #delete {
+        display: inline-block;
+          padding: 10px 20px;
+          font-size: 15px;
+          cursor: pointer;
+          text-align: center;
+          outline: none;
+          color: #fff;
+          background-color: red;
+          border: none;
+          border-radius: 15px;
+          box-shadow: 0 3px #838383;
+          margin-right: 5px;
+          margin-left: 5px;
+          margin-top: 5px;
+          margin-bottom: 5px;
+    }
+
+    #delete:hover {
+            background-color: darkred;
+        }
+
+    #delete:active {
+      background-color: darkred;
+      box-shadow: 0 3px #666;
+      transform: translateY(4px);
+    }
+
+/*Drop down menu, floating right*/
     .dropbtn {
         background-color: #BC8F8F;
         color: white;
