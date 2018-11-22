@@ -4,8 +4,13 @@
 METHOD: GET
 ENDPOINT: /app/authenticate
 BODY (json): {"email": string, "password": string}
-RESPONSE (json): {"id": integer, "username": string, "name": string, "email": string, "role": string}
-
+RESPONSE (json): {user{
+"id": integer,
+"username": string,
+"name": string,
+"email": string,
+"role": string},
+token{"token": string}}
 
 /* --------------------- User ------------------ */
 
@@ -26,6 +31,10 @@ METHOD: POST
 ENDPONT: /app/user/updateUser
 BODY (json): {"userid": string, "column": string, "value": string}
 RESPONSE (json):
+
+/* user metrics */
+METHOD: GET
+ENDPOINT: /app/userMetrics/:id/
 
 /* ------------------------- List ------------------------ */
 
