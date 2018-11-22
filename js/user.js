@@ -1,19 +1,8 @@
 const express = require('express')
 const router = express.Router();
 const db = require("./db.js");
-
-//---------- hente alle brukere ----------
-router.get('/app/allUsers',async function(req,res,next){
-  let sql = 'select * from public."Users";';
-
-  try {
-    let users = await db.runQuery(sql);
-    res.status(200).json(JSON.stringify(users));
-  }
-  catch(err) {
-    res.status(500).json({error: err});
-  }
-});
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 //---------- opprette ny bruker ----------
 router.post('/app/user', async function(req,res,next){
@@ -23,49 +12,29 @@ router.post('/app/user', async function(req,res,next){
   let userEmail = req.body.email;
   let userPsw = req.body.password;
 
+  /*bcrypt.hash(req.body.password, saltRounds).then(function(hashed){
+    userPsw = hash;
+  });*/
+
+
   let sql =  `insert into public."Users" ("username","name", "email", "password")
-   values('${username}', '${fullName}', '${userEmail}', '${userPsw}')
-   returning "id", "username", "name", "email", "role";`;
+  values('${username}', '${fullName}', '${userEmail}', '${userPsw}')
+  returning "id", "username", "name", "email", "role";`;
 
   try {
     let data = await db.runQuery(sql);
+    let err = db.previousError(); //  console.log(err.detail);
 
-    let err = (db.previousError);
     if(err){
-      // DB spørringen virket ikke
-      res.status(400).send(err).end();
-    } else{
-      // Ny bruker i databasaen
-        res.status(200).json(data);
+      res.status(400).send(err.detail); //send(err)?
+    } else {
+      res.status(200).json(data);
     }
-console.log();
-
-
   }
-
   catch(err) {
+    console.log("error fra user.js " + err);
     res.status(500).json({error: err});
   }
-});
-
-//---------- logge inn ----------
-router.post("/app/login", async function(req,res){
-
-  let username = req.body.username;
-  let password = req.body.password;
-
-  let sql = `select id, username, name, email, role from public."Users" where "username" = '${username}'
-   and "password" = '${password}';`
-
-  try {
-	let data = await db.runQuery(sql);
-	res.status(200).json(data);
-	//hva returneres hvis den ikke finner bruker?
-
-  } catch(err){
-	res.status(500).json({error: err});
-  }
-
 });
 
 //---------- slette bruker ----------
@@ -89,21 +58,26 @@ router.delete('/app/deleteUser/:id/', async function(req, res, next){
 //---------- oppdatere bruker ----------
 router.post('/app/user/updateUser', async function(req, res, next){
 
-let userId = req.body.userid;
-let column = req.body.column;
-let newValue = req.body.value;
+  let userId = req.body.userid;
+  let column = req.body.column;
+  let newValue = req.body.value;
 
-let sql = `update public."Users" set ${column} = '${newValue}'
-where id = '${userId}';`;
+  let sql = `update public."Users" set ${column} = '${newValue}'
+  where id = '${userId}' returning name, username, email;`;
 
-try {
-  let data = await db.runQuery(sql);
-  res.status(200).json(data);
-}
+  try {
+    let data = await db.runQuery(sql);
+    if(data){
+      res.status(200).json(data[0]);
+    }
+    else {
+      res.status(400).json({message: "not unique"})
+    }
+  }
 
-catch(err) {
-  res.status(500).json({error: err});
-}
+  catch(err) {
+    res.status(500).json({error: err});
+  }
 
 });
 

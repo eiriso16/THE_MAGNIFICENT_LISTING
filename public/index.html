@@ -2,12 +2,13 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="listing.css" rel="stylesheet" />
   <title>Things todo</title>
+  <link href="listing.css" rel="stylesheet" />
 </head>
 
 <body>
   <div id="container"></div>
+  <p id="userResponse"></p>
   <p id="userResp"></p>
   <p id="loginResp"></p>
   <p id="deleteResp"></p>
@@ -67,8 +68,10 @@
       </form>
     </div>
 
-    <div>
-      <button id="btnDelList">Delete List</button>
+    <div id="listButtons">
+      <button id="btnDelList">Delete list</button>
+      <button id="btnUpdList">Edit listname</button>
+       <!--<button onclick="TagDrop()" class="dropMenu">Tags</button>-->
       <p id="delListResp"></p>
     </div>
   </template>
@@ -88,16 +91,14 @@
 
   <div id="menu">
     <div id="userInfo"></div>
-    <span>Delete user</span>
-    <input id="userId" type="text" placeholder="id">
     <button id="delete">Delete account</button>
     <button id="logout">Log out</button>
-    <button id="auth">Check auth</button>
     <button id="allLists">Back to lists</button>
     <button id="updUser">Update user</button>
     <button id="metrics">User metrics</button>
   </div>
 
   <script src="js/app.js" type="text/javascript"></script>
+
 </body>
 </html>
