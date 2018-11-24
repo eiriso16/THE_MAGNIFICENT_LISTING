@@ -4,14 +4,6 @@ const localConnectionString = 'postgres://dibyhwpyxdtsqk:2e9853a21210046b952b68c
 
 const db = {}
 
-let previousError =null;
-db.previousError = function()
-{
-  let perror = previousError;
-  previousError = null;
-  return perror;
-}
-
 db.runQuery = async function(sql){
   const client = new Client({
     connectionString: connectionString || localConnectionString,
@@ -31,8 +23,7 @@ db.runQuery = async function(sql){
     await client.end();
 
   } catch (error) {
-    console.log("error fra catch i db.js: " + error);
-    previousError = error;
+    console.log(error);
   }
 
   return response;

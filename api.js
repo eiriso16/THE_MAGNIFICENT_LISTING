@@ -32,6 +32,11 @@ ENDPONT: /app/user/updateUser
 BODY (json): {"userid": string, "column": string, "value": string}
 RESPONSE (json):
 
+/* update users password */
+METHOD: POST
+
+ENDPOINT: app/user/updateUserPsw
+
 /* user metrics */
 METHOD: GET
 ENDPOINT: /app/userMetrics/:id/
@@ -60,4 +65,8 @@ ENDPOINT: /app/list/deleteItems/:listid
 
 /* delte list */
 METHOD: DELETE
-ENDPOINT: /app/deleteUser/:id/
+ENDPOINT: /app/deleteList/:id/
+
+/* delete all items and lists */
+METHOD: DELETE
+ENDPOINT: /app/list/deleteAllLists/:userid

@@ -45,7 +45,6 @@ async function createUser(evt){
   let name = document.getElementById("newName").value;
   let email = document.getElementById("newEmail").value;
   let password = document.getElementById("newPsw").value;
-  let userResp = document.getElementById("userResp");
 
   try {
     let response = await fetch("/app/user", {
@@ -60,19 +59,16 @@ async function createUser(evt){
         password: password
       })
     });
-
+  let data = await response.json();
     if(response.status === 200 ){
-      let data = await response.json();
       userResponse.innerHTML = "User created, log in to proceed";
     }
     else if (response.status === 400){
-      let data = await response.text();
-      userResponse.innerHTML = data;
-      //userResponse.innerHTML = "User not unique";
+      userResponse.innerHTML = data.message;
     }
 
   } catch(err){
-    userResp.innerHTML = "Something went wrong: " + err;
+    userResponse.innerHTML = "Something went wrong: " + err;
     console.log(err);
   }
 }
@@ -95,7 +91,7 @@ async function loginUser(){
     if(response.status === 200){
       localStorage.setItem("user", JSON.stringify(data.user));
       localStorage.setItem("token", data.token);
-      console.log(localStorage.getItem("token"));
+
       userResponse.innerHTML = "";
       view();
       usersLists();
@@ -115,6 +111,7 @@ async function loginUser(){
 
 function checkAuthentication(){
   let user = JSON.parse(localStorage.getItem("user"));
+
   if(user){
     return true;
   }
@@ -127,6 +124,7 @@ btnLogout.onclick = logOut;
 function logOut(){
   localStorage.removeItem("user");
   localStorage.removeItem("listId");
+  localStorage.removeItem("token");
   view();
 }
 
@@ -139,7 +137,7 @@ function updateUserInfo(){
   upd.onclick = updUserColumn;
 
   let btnDel = document.getElementById("delete");
-  btnDel.onclick = deleteUser;
+  btnDel.onclick = deleting;
 }
 
 function updUserColumn(evt){
@@ -165,9 +163,13 @@ function updUserColumn(evt){
   update.appendChild(btn);
   btn.id = column;
   btn.classList.add("settingBtn");
-  btn.onclick = updateUser;
+  if(column === 'password'){
+    btn.onclick = updateUserPsw;
+  }
+  else btn.onclick = updateUser;
 }
 
+//update users name, email, username
 async function updateUser(evt){
   let newValue = document.getElementById("newVal").value;
   let column = evt.target.id;
@@ -189,21 +191,80 @@ async function updateUser(evt){
 
     let data = await response.json();
     if(response.status === 200){
-      if(column === 'password'){
-        userResponse.innerHTML = "password updated";
-      }
-      else {
-        userResponse.innerHTML = "new " + column + ": " + data[column];
-      }
+      userResponse.innerHTML = "new " + column + ": " + data[column];
     }
     else if(response.status === 400){
       userResponse.innerHTML = column + " " + data.message;
     }
+    else if(response.status === 401){
+      userResponse.innerHTML = data.message;
+    }
 
   } catch(err){
     userResponse.innerHTML = "Something went wrong";
-    //userResponse.innerHTML = err.error;
   }
+}
+
+//update users password
+async function updateUserPsw(){
+
+  let newValue = document.getElementById("newVal").value;
+  let user = JSON.parse(localStorage.getItem("user"));
+
+  try {
+    let response = await fetch("/app/user/updateUserPsw", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "x-access-token": localStorage.getItem("token")
+      },
+      body: JSON.stringify({
+        userid: user.id,
+        password: newValue
+      })
+    });
+
+    let data = await response.json();
+    if(response.status === 200){
+      userResponse.innerHTML = "password updated";
+    }
+    else if(response.status === 401){
+      userResponse.innerHTML = data.message;
+    }
+
+  } catch(err){
+    userResponse.innerHTML = "Something went wrong";
+  }
+
+}
+
+async function deleting(){
+let delUser =  window.confirm("Are you sure? Deleting your account will also delete all your lists");
+  if(delUser){
+  await deleteUsersLists();
+  await deleteUser();
+  }
+
+}
+
+// ---------- delete users lists ----------
+async function deleteUsersLists(){
+    let user = JSON.parse(localStorage.getItem("user"));
+    try {
+      let response = await fetch(`app/list/deleteAllLists/${user.id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
+          "x-access-token": localStorage.getItem("token")
+        },
+      });
+
+      let data = await response.json();
+
+    } catch(err){
+      console.log(err);
+    }
+
 }
 
 // --------- delete user ------------
@@ -211,12 +272,16 @@ async function deleteUser(){
   let user = JSON.parse(localStorage.getItem("user"));
   try {
     let response = await fetch(`app/deleteUser/${user.id}/`, {
-      method: "DELETE"
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "x-access-token": localStorage.getItem("token")
+      },
     });
 
     let data = await response.json();
     if(data.length === 1){
-      userResponse.innerHTML = "User " + data[0].id + " deleted";
+      userResponse.innerHTML = "User " + data[0].username + " deleted";
       logOut();
     }
     else userResponse.innerHTML = "Something went wrong..";
@@ -238,8 +303,15 @@ async function showMetrics(){
   container.appendChild(output);
 
   try {
-    let response = await fetch(`app/userMetrics/${user.id}/`);
-    let data = await response.json(); console.log(data);
+    let response = await fetch(`app/userMetrics/${user.id}/`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "x-access-token": localStorage.getItem("token")
+      }
+    });
+
+    let data = await response.json();
     output.innerHTML = "You have " + data.lists + " lists containing a total of "
     + data.items + " items";
 
@@ -260,7 +332,8 @@ async function createList(evt){
     let response = await fetch(url,{
       method:"POST",
       headers:{
-        "Content-Type": "application/json; charset=utf-8"
+        "Content-Type": "application/json; charset=utf-8",
+        "x-access-token": localStorage.getItem("token")
       },
       body: JSON.stringify({
         listName: listname,
@@ -298,7 +371,8 @@ async function addItem(evt){
     let response = await fetch(url,{
       method:"POST",
       headers:{
-        "Content-Type": "application/json; charset=utf-8"
+        "Content-Type": "application/json; charset=utf-8",
+        "x-access-token": localStorage.getItem("token")
       },
       body: JSON.stringify({
         itemName: item,
@@ -329,7 +403,13 @@ async function usersLists(){
   userResponse.innerHTML = "";
 
   try {
-    let response = await fetch(`app/list/${user.id}/`);
+    let response = await fetch(`app/list/${user.id}/`, {
+      method:"GET",
+      headers:{
+        "Content-Type": "application/json; charset=utf-8",
+        "x-access-token": localStorage.getItem("token")
+      }
+    });
     let data = await response.json();
     let span = document.createElement("span");
     lists.appendChild(span);
@@ -400,7 +480,8 @@ async function updateListName(evt){
     let response = await fetch(url,{
       method:"POST",
       headers:{
-        "Content-Type": "application/json; charset=utf-8"
+        "Content-Type": "application/json; charset=utf-8",
+        "x-access-token": localStorage.getItem("token")
       },
       body: JSON.stringify({
         listid: listId,
@@ -432,7 +513,13 @@ async function showItems(){
   itemsContainer.innerHTML = "";
 
   try {
-    let response = await fetch(`app/list/items/${listId}`);
+    let response = await fetch(`app/list/items/${listId}`, {
+      method: "GET",
+      headers:{
+        "Content-Type": "application/json; charset=utf-8",
+        "x-access-token": localStorage.getItem("token")
+      }
+    });
     let data = await response.json();
 
     if(data){
@@ -529,9 +616,6 @@ function checkDueDate(duedate, name){
   let month = x.getMonth() + 1;
   let date = x.getDate();
   let today = year + "-" + month + "-" + date;
-  //console.log(duedate);
-  //let deadline = duedate.substring(0,10);
-  //console.log(deadline);
 
   let alertMessage = "";
 
@@ -553,7 +637,8 @@ async function setListDone(listId, done){
     let response = await fetch(url,{
       method:"POST",
       headers:{
-        "Content-Type": "application/json; charset=utf-8"
+        "Content-Type": "application/json; charset=utf-8",
+        "x-access-token": localStorage.getItem("token")
       },
       body: JSON.stringify({
         listid: listId,
@@ -587,7 +672,8 @@ async function setChecked(evt){
     let response = await fetch(url,{
       method:"POST",
       headers:{
-        "Content-Type": "application/json; charset=utf-8"
+        "Content-Type": "application/json; charset=utf-8",
+        "x-access-token": localStorage.getItem("token")
       },
       body: JSON.stringify({
         listid: listId,
@@ -630,7 +716,8 @@ async function updateItem(evt){
     let response = await fetch(url,{
       method:"POST",
       headers:{
-        "Content-Type": "application/json; charset=utf-8"
+        "Content-Type": "application/json; charset=utf-8",
+        "x-access-token": localStorage.getItem("token")
       },
       body: JSON.stringify({
         listid: listId,
@@ -696,7 +783,8 @@ async function updateImp(evt){
     let response = await fetch(url,{
       method:"POST",
       headers:{
-        "Content-Type": "application/json; charset=utf-8"
+        "Content-Type": "application/json; charset=utf-8",
+        "x-access-token": localStorage.getItem("token")
       },
       body: JSON.stringify({
         listid: listId,
@@ -734,7 +822,6 @@ function setDeadline(evt){
 
 async function updateDeadline(evt){
   let date = document.getElementById("dateInp").value;
-  console.log(date);
   let listId = localStorage.getItem("listId");
   let itemName = evt.target.parentElement.id;
 
@@ -743,7 +830,8 @@ async function updateDeadline(evt){
     let response = await fetch(url,{
       method:"POST",
       headers:{
-        "Content-Type": "application/json; charset=utf-8"
+        "Content-Type": "application/json; charset=utf-8",
+        "x-access-token": localStorage.getItem("token")
       },
       body: JSON.stringify({
         listid: listId,
@@ -769,7 +857,11 @@ async function deleteItem(evt){
   let itemName = evt.target.id;
   try {
     let response = await fetch(`/app/list/deleteItem/${listId}/${itemName}`, {
-      method: "DELETE"
+      method: "DELETE",
+      headers:{
+       "Content-Type": "application/json; charset=utf-8",
+       "x-access-token": localStorage.getItem("token")
+     }
     });
     let data = await response.json();
     showItems();
@@ -785,7 +877,11 @@ async function deleteAllItemsInList(){
 
   try {
     let response = await fetch(`app/list/deleteItems/${listId}`, {
-      method: "DELETE"
+      method: "DELETE",
+      headers:{
+       "Content-Type": "application/json; charset=utf-8",
+       "x-access-token": localStorage.getItem("token")
+     }
     });
     let data = await response.json();
     await deleteList();
@@ -807,6 +903,7 @@ async function deleteList(){
       method: "DELETE",
       headers: {
         "Content-Type": "application/json; charset=utf-8",
+        "x-access-token": localStorage.getItem("token")
       }
     });
     let data = await response.json();
