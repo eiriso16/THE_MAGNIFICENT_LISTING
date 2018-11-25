@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const jwt = require('jsonwebtoken');
 
-const TOKEN_KEY = process.env.TOKEN_KEY || 'thisisthemagnificentlocaltokenkey';
+const TOKEN_KEY = process.env.TOKEN_KEY;
 
 router.get('/app/authenticate', async function(req, res, next){
   let authHeader = req.headers.authorization;
