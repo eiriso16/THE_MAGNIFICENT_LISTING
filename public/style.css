@@ -1,0 +1,416 @@
+html {
+    background: url(images/pixabay-desk.jpg);
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: fixed;
+    background-size: cover;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+/*In case elements inside login and signup would flow outside of its own box*/
+.cssWrap {
+    overflow:hidden;
+}
+
+/* Create two equal columns that floats next to each other */
+.loginDiv {
+    float: left;
+    width: 40%;
+    padding: 15px;
+    text-align: center;
+    background-color: rgba(52, 73, 94, 0.7);
+    border-radius: 5px;
+    margin-top: 100px;
+    margin-left: 60px;
+    margin-right:5px;
+}
+
+.signupDiv {
+    float: right;
+    width: 40%;
+    padding: 15px;
+    text-align: center;
+    background-color: rgba(52, 73, 94, 0.7);
+    border-radius: 5px;
+    margin-top: 100px;
+    margin-right: 60px;
+    margin-left:5px;
+}
+
+/* Clear floats after the columns */
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+/* Responsive layout - makes the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width:650px) {
+    .loginDiv {
+        width: 75%;
+        float: center;
+        margin-left: 50px;
+        margin-right: 50px;
+    }
+    .signupDiv {
+        width: 75%;
+        float: center;
+        margin-left: 50px;
+        margin-right: 50px;
+    }
+}
+
+/*Sets CSS for specific input fields*/
+input[id="listName"], input[id="newUsername"], input[id="newName"], input[id="newEmail"], input[id="newPsw"], input[id="userName"], input[id="userPsw"] {
+    width: 70%;
+    height: 45px;
+    font-size: 18px;
+    margin-bottom: 20px;
+    background-color: #ffffff;
+    border-radius: 4px;
+
+}
+
+/*Sets CSS for buttons, with a fancy press down thing*/
+.cssBtn {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 15px;
+  cursor: pointer;
+  text-align: center;
+  outline: none;
+  color: #fff;
+  background-color: #BC8F8F;
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 3px #838383;
+  margin-right: 5px;
+  margin-left: 5px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.cssBtn:hover {
+    background-color: #b08686
+}
+
+.cssBtn:active {
+  background-color: #b08686;
+  box-shadow: 0 3px #666;
+  transform: translateY(4px);
+}
+
+/*The CSS of the delete button, since I wanted it red*/
+#delete {
+    display: inline-block;
+      padding: 10px 20px;
+      font-size: 15px;
+      cursor: pointer;
+      text-align: center;
+      outline: none;
+      color: #fff;
+      background-color: red;
+      border: none;
+      border-radius: 15px;
+      box-shadow: 0 3px #838383;
+      margin-right: 5px;
+      margin-left: 5px;
+      margin-top: 5px;
+      margin-bottom: 5px;
+}
+
+#delete:hover {
+        background-color: darkred;
+    }
+
+#delete:active {
+  background-color: darkred;
+  box-shadow: 0 3px #666;
+  transform: translateY(4px);
+}
+
+/*Drop down menu, floating right*/
+.dropbtn {
+    background-color: #BC8F8F;
+    color: white;
+    padding: 16px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    top 30px;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {
+    background-color: #f1f1f1;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown:hover .dropbtn {
+    background-color: #b08686;
+}
+
+/*Visuals of the menu buttons*/
+button[id="allLists"], button[id="updUser"], button[id="logout"] {
+    background-color: #f9f9f9;
+    border: none;
+    color: black;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 17px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+
+/*Create list*/
+#createList {
+    float: center;
+    width: 90%;
+    padding: 15px;
+    text-align: center;
+    background-color: rgba(52, 73, 94, 0.5);
+    border-radius: 5px;
+    margin: 0 auto;
+    margin-top: 50px;
+}
+
+/*List response text*/
+#listResp, #userResp, #deleteResp {
+    color: black;
+    text-align: center;
+    font-weight: bold;
+    text-shadow: 3px 2px #b08686;
+}
+
+/*Add new item*/
+#addItem {
+    float: center;
+    width: 90%;
+    padding: 15px;
+    text-align: center;
+    background-color: rgba(52, 73, 94, 0.5);
+    border-radius: 5px;
+    margin: 0 auto;
+    margin-top: 50px;
+}
+/*List items input field*/
+input[id="listItem"] {
+    width: 70%;
+    height: 30px;
+    font-size: 14px;
+    margin-bottom: 20px;
+    background-color: #ffffff;
+    border-radius: 4px;
+}
+
+/*CSS for the inside of updateUser + settings title*/
+#updateUser {
+    float: center;
+    width: 90%;
+    padding: 15px;
+    color: floralwhite;
+    text-align: center;
+    background-color: rgba(52, 73, 94, 0.5);
+    border-radius: 5px;
+    margin: 0 auto;
+    margin-top: 50px;
+}
+
+/*The style of the settings page*/
+#updUserSelect {
+    float: center;
+    width: 90%;
+    padding: 15px;
+    color: floralwhite;
+    text-align: center;
+    background-color: rgba(52, 73, 94, 0.5);
+    border-radius: 5px;
+    margin: 0 auto;
+    margin-top: 50px;
+}
+
+/*Text css for name, username, email and password in user update*/
+#chooseUpdate {
+    text-decoration-line: underline;
+}
+
+/*When text is hovered over, text color changes*/
+.settings:hover {
+    color: #b08686;
+    text-decoration-line: underline;
+    cursor: pointer;
+}
+
+
+/*The css for the names of lists*/
+.listedLists {
+    float: center;
+    width: 70%;
+    padding: 18px;
+    color: floralwhite;
+    text-align: center;
+    background-color: rgba(52, 73, 94, 0.3);
+    border-radius: 5px;
+    margin: 0 auto;
+    margin-top: 10px;
+}
+
+/*Header for lists "your lists"*/
+#listHeader {
+    text-align: center;
+    color: floralwhite;
+    font-size: 50px;
+}
+
+/*The css for listed items*/
+.listedItems {
+    float: center;
+    width: 90%;
+    padding: 15px;
+    color: floralwhite;
+    text-align: left;
+    text-transform: capitalize;
+    font-size: 18px;
+    background-color: rgba(52, 73, 94, 0.5);
+    border-radius: 15px;
+    margin: 0 auto;
+    margin-top: 10px;
+}
+
+#currentList {
+    float: center;
+    margin-top: 30px;
+    text-align: center;
+    color: black;
+    font-size: 50px;
+    text-shadow: 2px 1px #b08686;
+}
+
+/*Css for importance level, normal, red, yellow, green*/
+.importance0 {
+    background-color: rgba(52, 73, 94, 0.5);
+    color:floralwhite;
+}
+
+.importance1 {
+    background-color: rgba(245, 15, 15, 0.5);
+    color:floralwhite;
+}
+
+.importance2 {
+    background-color: rgba(248, 245, 16, 0.5);
+    color:grey;
+}
+
+.importance3 {
+    background-color: rgba(105, 248, 16, 0.5);
+    color:gray;
+}
+
+/*Inside of item box, tag etc*/
+.itemlistName {
+
+    font-size: 20px;
+    margin-left:5px;
+    margin-right:1px;
+}
+
+.itembox {
+    transform: scale(2);
+    margin: 10px;
+}
+
+.itemTag {
+    font-size: 12px;
+    font-style: italic;
+    align-self: center;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.itemlistUpd {
+    float:right;
+    align-content:center;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.itemlistImp {
+    float:right;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.itemDeadl {
+    float:right;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.itemlistDel {
+    float:right;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+/*Input field css - Settings*/
+#newVal {
+    width: 70%;
+    height: 30px;
+    font-size: 14px;
+    margin-bottom: 20px;
+    margin-left: 10px;
+    background-color: #ffffff;
+    border-radius: 4px;
+}
+
+/*Teksten foran input field - Settings*/
+.settingInf{
+    color: floralwhite;
+    font-size: 15px;
+}
+
+/*Buttons in settings*/
+.settingBtn{
+  display: inline-block;
+  padding: 7px 20px;
+  font-size: 15px;
+  cursor: pointer;
+  text-align: center;
+  color: #fff;
+  background-color: #BC8F8F;
+  border-radius: 15px;
+  box-shadow: 0 1px #838383;
+  margin-left: 10px;
+}

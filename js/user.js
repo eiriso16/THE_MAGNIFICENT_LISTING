@@ -1,80 +1,42 @@
 const express = require('express')
 const router = express.Router();
 const db = require("./db.js");
-
-//---------- hente alle brukere ----------
-router.get('/app/allUsers',async function(req,res,next){
-  let sql = 'select * from public."Users";';
-
-  try {
-    let users = await db.runQuery(sql);
-    res.status(200).json(JSON.stringify(users));
-  }
-  catch(err) {
-    res.status(500).json({error: err});
-  }
-});
+const auth = require('./auth.js');
 
 //---------- opprette ny bruker ----------
-router.post('/app/user', async function(req,res,next){
-  /// todo password-hashing?
+router.post('/app/user', auth.crypt, async function(req,res,next){
+
   let username = req.body.username;
   let fullName = req.body.name;
   let userEmail = req.body.email;
-  let userPsw = req.body.password;
+  let hashedPsw = req.hashed;
 
   let sql =  `insert into public."Users" ("username","name", "email", "password")
-   values('${username}', '${fullName}', '${userEmail}', '${userPsw}')
-   returning "id", "username", "name", "email", "role";`;
+  values('${username}', '${fullName}', '${userEmail}', '${hashedPsw}')
+  returning "id", "username", "name", "email", "role";`;
 
   try {
     let data = await db.runQuery(sql);
 
-    let err = (db.previousError);
-    if(err){
-      // DB spørringen virket ikke
-      res.status(400).send(err).end();
-    } else{
-      // Ny bruker i databasaen
-        res.status(200).json(data);
+    if(data){
+      res.status(200).json(data);
+
+    } else {
+        res.status(400).json({message: "not a unique username/email"});
     }
-console.log();
-
-
   }
-
   catch(err) {
     res.status(500).json({error: err});
   }
 });
 
-//---------- logge inn ----------
-router.post("/app/login", async function(req,res){
-
-  let username = req.body.username;
-  let password = req.body.password;
-
-  let sql = `select id, username, name, email, role from public."Users" where "username" = '${username}'
-   and "password" = '${password}';`
-
-  try {
-	let data = await db.runQuery(sql);
-	res.status(200).json(data);
-	//hva returneres hvis den ikke finner bruker?
-
-  } catch(err){
-	res.status(500).json({error: err});
-  }
-
-});
-
 //---------- slette bruker ----------
-router.delete('/app/deleteUser/:id/', async function(req, res, next){
+router.delete('/app/deleteUser/:id/', auth.verifyToken, async function(req, res, next){
 
   let id = req.params.id;
 
   let sql = `delete from public."Users" where id = '${id}'
-  returning id ;`;
+  returning username ;`;
 
   try {
     let data = await db.runQuery(sql);
@@ -83,27 +45,83 @@ router.delete('/app/deleteUser/:id/', async function(req, res, next){
   catch(err) {
     res.status(500).json({error: err});
   }
-
 });
 
 //---------- oppdatere bruker ----------
-router.post('/app/user/updateUser', async function(req, res, next){
+router.post('/app/user/updateUser', auth.verifyToken, async function(req, res, next){
 
-let userId = req.body.userid;
-let column = req.body.column;
-let newValue = req.body.value;
+  let userId = req.body.userid;
+  let column = req.body.column;
+  let newValue = req.body.value;
 
-let sql = `update public."Users" set ${column} = '${newValue}'
-where id = '${userId}';`;
+  try {
 
-try {
-  let data = await db.runQuery(sql);
-  res.status(200).json(data);
-}
+    let sql = `update public."Users" set ${column} = '${newValue}'
+    where id = '${userId}' returning name, username, email;`;
 
-catch(err) {
-  res.status(500).json({error: err});
-}
+    let data = await db.runQuery(sql);
+    if(data){
+      res.status(200).json(data[0]);
+    }
+    else {
+      res.status(400).json({message: "not unique"})
+    }
+  }
+
+  catch(err) {
+    res.status(500).json({error: err});
+  }
+
+});
+
+//---------- oppdatere brukers passord ----------
+router.post('/app/user/updateUserPsw', auth.verifyToken, auth.crypt, async function(req, res, next){
+
+  let userId = req.body.userid;
+  let newValue = req.hashed;
+
+  try {
+
+    let sql = `update public."Users" set password = '${newValue}'
+    where id = '${userId}' returning name, username, email;`;
+
+    let data = await db.runQuery(sql);
+    if(data){
+      res.status(200).json(data[0]);
+    }
+    else {
+      res.status(500).json({message: "something went wrong"});
+    }
+  }
+
+  catch(err) {
+    res.status(500).json({error: err});
+  }
+
+});
+
+
+//---------- user metrics ----------
+router.get('/app/userMetrics/:id/', auth.verifyToken, async function(req, res, next){
+
+  let id = req.params.id;
+
+  let sqlLists = `select count(*) as lists from public."Lists" l
+  join public."Users" u on (l.owner = u.id and u.id = '${id}');`;
+
+  let sqlItems = `select count(*) as items from public."Items" i
+  join public."Lists" l on (i.listid = l.id)
+  join public."Users" u on (l.owner = u.id and u.id = '${id}');`;
+
+  try {
+    let lists = await db.runQuery(sqlLists);
+    let items = await db.runQuery(sqlItems);
+    //res.status(200).json(lists);
+    res.status(200).send({lists: lists[0].lists, items: items[0].items})
+  }
+  catch(err) {
+    res.status(500).json({error: err});
+  }
 
 });
 

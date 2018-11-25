@@ -1,4 +1,18 @@
-/* --------------------- Users ------------------ */
+/* --------------------- Auth ------------------ */
+
+/* login user */
+METHOD: GET
+ENDPOINT: /app/authenticate
+BODY (json): {"email": string, "password": string}
+RESPONSE (json): {user{
+"id": integer,
+"username": string,
+"name": string,
+"email": string,
+"role": string},
+token{"token": string}}
+
+/* --------------------- User ------------------ */
 
 /* create user*/
 METHOD: POST
@@ -6,30 +20,28 @@ ENDPOINT: /app/user
 BODY (json): {"name": string, "email": string, "password": string}
 RESPONSE (json): {"id": integer, "name": string, "email": string}
 
-/* login user */
-METHOD: POST
-ENDPOINT: /app/login
-BODY (json): {"email": string, "password": string}
-RESPONSE (json): {user} //hva er riktig retur her?
-
-/* get all users */
-METHOD: GET
-ENDPOINT: /app/allUsers
-RESPONSE (json): array with user-objects
-
 /* delete user */
 METHOD: DELETE
 ENDPOINT: /app/deleteUser/:id/
 PARAMS ??
 RESPONSE (json): {"id:" integer}
 
-/* */
+/* update user */
 METHOD: POST
 ENDPONT: /app/user/updateUser
 BODY (json): {"userid": string, "column": string, "value": string}
 RESPONSE (json):
 
-/* ------------------------- Lists ------------------------ */
+/* update users password */
+METHOD: POST
+
+ENDPOINT: app/user/updateUserPsw
+
+/* user metrics */
+METHOD: GET
+ENDPOINT: /app/userMetrics/:id/
+
+/* ------------------------- List ------------------------ */
 
 /* create list */
 METHOD: POST
@@ -53,4 +65,8 @@ ENDPOINT: /app/list/deleteItems/:listid
 
 /* delte list */
 METHOD: DELETE
-ENDPOINT: /app/deleteUser/:id/
+ENDPOINT: /app/deleteList/:id/
+
+/* delete all items and lists */
+METHOD: DELETE
+ENDPOINT: /app/list/deleteAllLists/:userid

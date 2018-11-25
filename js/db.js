@@ -17,17 +17,14 @@ db.runQuery = async function(sql){
 
     let res = await client.query(sql).then(function(res){
       return res;
-    }).catch(function(err){
-      console.error(err);
     });
 
     response = res.rows;
     await client.end();
 
   } catch (error) {
-  console.log("error fra catch: " + error);
-  //response = error;
- }
+    console.log(error);
+  }
 
   return response;
 }
