@@ -467,7 +467,7 @@ async function showItems(){
         checkBox.onclick = setChecked;
 
         let span = document.createElement("span");
-        span.innerHTML = "x ";
+        span.innerHTML = "✘ ";
         span.id = data[i].name;
         span.classList.add("itemlistDel");
         span.onclick = deleteItem;
@@ -487,10 +487,11 @@ async function showItems(){
         let deadline = document.createElement("span");
         deadline.innerHTML = "Set Deadline ";
         deadline.id = data[i].name;
-          
+        
         if(data[i].duedate){
           deadline.title = data[i].duedate;
         }
+        
         deadline.classList.add("itemDeadl");
         deadline.onclick = setDeadline;
 

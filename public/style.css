@@ -360,7 +360,7 @@ body {
         color:floralwhite;
     }
 
-    .importance1 {
+    .importance3 {
         background-color: rgba(245, 15, 15, 0.6);
         color:floralwhite;
     }
@@ -370,7 +370,7 @@ body {
         color:grey;
     }
 
-    .importance3 {
+    .importance1 {
         background-color: rgba(105, 248, 16, 0.5);
         color:gray;
     }
@@ -413,7 +413,7 @@ body {
 
     .itemlistDel {
         float:right;
-        margin-top: 5px;
+        margin-top: 2px;
         margin-left: 5px;
         margin-right: 5px;
     }
@@ -426,8 +426,8 @@ body {
         display: inline-block;
     }
 
-  /*Hover over deadline
-        .itemDeadl .deadDate {
+  /*Hover over deadline*/
+        .itemDeadl .deadlDate {
         visibility: hidden;
         width: 120px;
         background-color: black;
@@ -444,11 +444,11 @@ body {
         margin-left: -60px;
     }
 
-    .itemDeadl:hover .deadDate {
+    .itemDeadl:hover .deadlDate {
         visibility: visible;
     }
 
-    .itemDeadl .deadDate::after {
+    .itemDeadl .deadlDate:after {
         content: " ";
         position: absolute;
         top: 100%;
@@ -457,7 +457,7 @@ body {
         border-width: 5px;
         border-style: solid;
         border-color: black transparent transparent transparent;
-    }*/
+    }
 
 /*Input field css - Settings*/
     #newVal {
