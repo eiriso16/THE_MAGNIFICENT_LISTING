@@ -321,7 +321,7 @@ async function showMetrics(){
       }
     });
 
-    let data = await response.json(); console.log(data);
+    let data = await response.json();
     if(data[0]){
       showOutput(data[0]);
     }
@@ -503,10 +503,10 @@ function updListName(evt){
   let input = document.createElement("input");
   let button = document.createElement("button");
 
-  input.id = "listName";
+  input.id = "newVal";
   button.innerHTML = "Update name";
   button.id = "name";
-  button.classList.add("cssBtn");
+  button.classList.add("settingBtn");
   button.onclick = updateListName;
 
   evt.target.parentElement.appendChild(input);
@@ -514,7 +514,7 @@ function updListName(evt){
 }
 
 async function updateListName(evt){
-  let newValue = document.getElementById("listName").value;
+  let newValue = document.getElementById("newVal").value;
   let column = evt.target.id;
   let listId = localStorage.getItem("listId");
 
@@ -540,7 +540,7 @@ async function updateListName(evt){
       userResponse.innerHTML = "Something went wrong";
     }
 
-    removeInput("listName", "name");
+    removeInput("newVal", "name");
 
   }
   catch(err){
@@ -554,10 +554,11 @@ function shareListStart(evt){
   let input = document.createElement("input");
   let button = document.createElement("button");
 
-  input.id = "username";
+  input.id = "newVal";
   input.placeholder = "add username";
   button.innerHTML = "Share list";
   button.id = "shareduser";
+  button.classList.add("settingBtn");
   button.onclick = shareList;
 
   evt.target.parentElement.appendChild(input);
@@ -565,7 +566,7 @@ function shareListStart(evt){
 }
 
 async function shareList(){
-  let username = document.getElementById("username").value;
+  let username = document.getElementById("newVal").value;
   let listId = localStorage.getItem("listId");
 
   try {
@@ -588,7 +589,7 @@ async function shareList(){
       userResponse.innerHTML = "Something went wrong";
     }
 
-    removeInput("username", "shareduser");
+    removeInput("newVal", "shareduser");
   }
   catch(err){
 

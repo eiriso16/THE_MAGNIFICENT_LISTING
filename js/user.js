@@ -107,12 +107,12 @@ router.get('/app/user/metrics/:id/', auth.verifyToken, async function(req, res, 
   let id = req.params.id;
 
   let sql = `select distinct (select count(*) from public."Lists" where owner = '${id}' or shareduser = '${id}') as lists,
-  (select count(*) from public."Items" i
-  join public."Lists" l on (i.listid = l.id)
-  join public."Users" u on ((l.owner = u.id or l.shareduser = u.id) and u.id = '${id}') ) as items,
-  (select count(*) from public."Lists" where shareduser is not null and owner = '${id}') as sharedlists,
-  (select count(*) from public."Lists" where done = true and owner = '${id}' or shareduser = '${id}') as donelists
-  from public."Lists";`;
+    (select count(*) from public."Items" i
+    join public."Lists" l on (i.listid = l.id)
+    join public."Users" u on ((l.owner = u.id or l.shareduser = u.id) and u.id = '${id}') ) as items,
+    (select count(*) from public."Lists" where (shareduser is not null and owner = '${id}') or shareduser = '${id}') as sharedlists,
+    (select count(*) from public."Lists" where ((done = true and owner = '${id}')  or (done = true and shareduser = '${id}')) ) as donelists
+    from public."Lists";`;
 
 
   try {
