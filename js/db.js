@@ -25,9 +25,7 @@ db.runQuery = async function(sql){
 
     let res = await client.query(sql).then(function(res){
       return res;
-    });/*.catch(function(err){
-      //  console.error(err);
-    });*/
+    });
 
     response = res.rows;
     await client.end();

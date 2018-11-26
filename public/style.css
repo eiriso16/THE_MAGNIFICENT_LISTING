@@ -1,4 +1,4 @@
-    html {
+body {
         background: url(images/pixabay-desk.jpg);
         background-repeat: no-repeat;
         background-position: center center;
@@ -181,7 +181,7 @@
     }
 
 /*Visuals of the menu buttons*/
-    button[id="allLists"], button[id="updUser"], button[id="logout"] {
+    button[id="allLists"], button[id="updUser"], button[id="logout"], button[id="metrics"] {
         background-color: #f9f9f9;
         border: none;
         color: black;
@@ -206,7 +206,7 @@
 }
 
 /*List response text*/
-    #listResp, #userResp, #deleteResp {
+    #listResp, #userResp, #deleteResp, #itemResp {
         color: black;
         text-align: center;
         font-weight: bold;
@@ -233,6 +233,20 @@
         background-color: #ffffff;
         border-radius: 4px;
     }
+
+/*User metrics page*/
+#userMetrics {
+        float: center;
+        width: 90%;
+        padding: 15px;
+        text-align: center;
+        background-color: rgba(52, 73, 94, 0.5);
+        border-radius: 5px;
+        margin: 0 auto;
+        margin-top: 50px;
+        font-size: 25px;
+        color: floralwhite;
+}
 
 /*CSS for the inside of updateUser + settings title*/
     #updateUser {
@@ -324,7 +338,7 @@
     }
 
     .importance1 {
-        background-color: rgba(245, 15, 15, 0.5);
+        background-color: rgba(245, 15, 15, 0.6);
         color:floralwhite;
     }
 
@@ -361,6 +375,7 @@
 
     .itemlistUpd {
         float:right;
+        margin-top: 5px;
         align-content:center;
         margin-left: 5px;
         margin-right: 5px;
@@ -368,21 +383,58 @@
 
     .itemlistImp {
         float:right;
-        margin-left: 5px;
-        margin-right: 5px;
-    }
-
-    .itemDeadl {
-        float:right;
+        margin-top: 5px;
         margin-left: 5px;
         margin-right: 5px;
     }
 
     .itemlistDel {
         float:right;
+        margin-top: 5px;
         margin-left: 5px;
         margin-right: 5px;
     }
+
+    .itemDeadl {
+        float:right;
+        margin-top: 5px;
+        margin-left: 5px;
+        margin-right: 5px;
+        display: inline-block;
+    }
+
+  /*Hover over deadline
+        .itemDeadl .deadDate {
+        visibility: hidden;
+        width: 120px;
+        background-color: black;
+        color: #fff;
+        text-align: center;
+        border-radius: 6px;
+        padding: 5px 0;
+
+        position: absolute;
+        z-index: 1;
+        width: 120px;
+        bottom: 100%;
+        left: 50%; 
+        margin-left: -60px;
+    }
+
+    .itemDeadl:hover .deadDate {
+        visibility: visible;
+    }
+
+    .itemDeadl .deadDate::after {
+        content: " ";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -5px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: black transparent transparent transparent;
+    }*/
 
 /*Input field css - Settings*/
     #newVal {

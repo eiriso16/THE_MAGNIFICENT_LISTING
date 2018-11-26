@@ -93,7 +93,9 @@ async function loginUser(){
     });
     let data = await response.json();
     if(response.status === 200){
-      localStorage.setItem("user", JSON.stringify(data));
+      localStorage.setItem("user", JSON.stringify(data.user));
+      localStorage.setItem("token", data.token);
+      console.log(localStorage.getItem("token"));
       userResponse.innerHTML = "";
       view();
       usersLists();
@@ -102,9 +104,12 @@ async function loginUser(){
     else if(response.status === 401){
       userResponse.innerHTML = data.message;
     }
+    else if(response.status === 500){
+      userResponse.innerHTML = data.message;
+    }
   }
   catch(error) {
-    console.log("Something went wrong");
+    console.log(error);
   }
 }
 
@@ -132,9 +137,9 @@ function updateUserInfo(){
   addTemplate("updateUserTemplate");
   let upd = document.getElementById("updUserSelect");
   upd.onclick = updUserColumn;
-    
-      let btnDel = document.getElementById("delete");
-    btnDel.onclick = deleteUser;
+
+  let btnDel = document.getElementById("delete");
+  btnDel.onclick = deleteUser;
 }
 
 function updUserColumn(evt){
@@ -156,7 +161,7 @@ function updUserColumn(evt){
   update.appendChild(inp);
 
   let btn = document.createElement("button");
-  btn.innerHTML = "Update";
+  btn.innerHTML = "update";
   update.appendChild(btn);
   btn.id = column;
   btn.classList.add("settingBtn");
@@ -173,6 +178,7 @@ async function updateUser(evt){
       method: "POST",
       headers: {
         "Content-Type": "application/json; charset=utf-8",
+        "x-access-token": localStorage.getItem("token")
       },
       body: JSON.stringify({
         userid: user.id,
@@ -183,7 +189,12 @@ async function updateUser(evt){
 
     let data = await response.json();
     if(response.status === 200){
-      userResponse.innerHTML = "new " + column + ": " + data[column];
+      if(column === 'password'){
+        userResponse.innerHTML = "password updated";
+      }
+      else {
+        userResponse.innerHTML = "new " + column + ": " + data[column];
+      }
     }
     else if(response.status === 400){
       userResponse.innerHTML = column + " " + data.message;
@@ -205,14 +216,38 @@ async function deleteUser(){
 
     let data = await response.json();
     if(data.length === 1){
-      deleteResp.innerHTML = "User " + data[0].id + " deleted";
+      userResponse.innerHTML = "User " + data[0].id + " deleted";
       logOut();
     }
-    else deleteResp.innerHTML = "Something went wrong..";
+    else userResponse.innerHTML = "Something went wrong..";
 
   } catch(err){
     console.log(err);
   }
+}
+
+// ---------- user metrics ----------
+let btnMetrics = document.getElementById("metrics");
+btnMetrics.onclick = showMetrics;
+
+async function showMetrics(){
+  addTemplate("userMetricsTemplate");
+  let user = JSON.parse(localStorage.getItem("user"));
+  let container = document.getElementById("userMetrics");
+  
+  let output = document.createElement("div");
+  container.appendChild(output);
+
+  try {
+    let response = await fetch(`app/userMetrics/${user.id}/`);
+    let data = await response.json(); console.log(data);
+    output.innerHTML = "You have " + data.lists + " lists containing a total of "
+    + data.items + " items";
+
+  } catch(err){
+
+  }
+
 }
 
 //----------Create List-------------
@@ -404,6 +439,7 @@ async function showItems(){
 
     if(data){
       let checkCounter = 0;
+      let alertMessage = "";
       for(let i in data){
         let div = document.createElement("div");
         div.id = data[i].name;
@@ -451,22 +487,29 @@ async function showItems(){
         let deadline = document.createElement("span");
         deadline.innerHTML = "Set Deadline ";
         deadline.id = data[i].name;
-        deadline.title = data[i].duedate;
+          
+        if(data[i].duedate){
+          deadline.title = data[i].duedate;
+        }
         deadline.classList.add("itemDeadl");
         deadline.onclick = setDeadline;
 
         div.appendChild(label);
         div.appendChild(checkBox);
-          
         div.appendChild(tagView);
-        
         div.appendChild(span);
         div.appendChild(deadline);
         div.appendChild(importance);
         div.appendChild(update);
-        
-        
         itemsContainer.appendChild(div);
+
+        if(data[i].duedate){
+          alertMessage += checkDueDate(data[i].duedate, data[i].name);
+        }
+      }
+
+      if (alertMessage){
+        alert (alertMessage);
       }
 
       if(checkCounter === data.length){
@@ -480,6 +523,30 @@ async function showItems(){
   } catch(err) {
     console.log(err);
   }
+}
+
+//---------------deadline alert-------------------
+function checkDueDate(duedate, name){
+  let x = new Date();
+  let year = x.getFullYear();
+  let month = x.getMonth() + 1;
+  let date = x.getDate();
+  let today = year + "-" + month + "-" + date;
+  //console.log(duedate);
+  //let deadline = duedate.substring(0,10);
+  //console.log(deadline);
+
+  let alertMessage = "";
+
+  if (duedate === today)
+  {
+    alertMessage = "You have met the deadline for: " + name + "\n";
+  }
+  else if(duedate < today){
+    alertMessage = "You have passed the deadline for: " + name + "\n";
+  }
+
+  return alertMessage;
 }
 
 //Updates done-status for list
@@ -658,7 +725,6 @@ function setDeadline(evt){
   let dateBtn = document.createElement("button");
 
   date.type = "date";
-
   date.id ="dateInp";
   dateBtn.id ="date";
 
@@ -671,7 +737,7 @@ function setDeadline(evt){
 
 async function updateDeadline(evt){
   let date = document.getElementById("dateInp").value;
-
+  console.log(date);
   let listId = localStorage.getItem("listId");
   let itemName = evt.target.parentElement.id;
 

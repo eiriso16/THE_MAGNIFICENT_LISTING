@@ -3,6 +3,7 @@ const router = express.Router();
 const db = require("./db.js");
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
+const auth = require('./auth.js')
 
 //---------- opprette ny bruker ----------
 router.post('/app/user', async function(req,res,next){
@@ -12,13 +13,13 @@ router.post('/app/user', async function(req,res,next){
   let userEmail = req.body.email;
   let userPsw = req.body.password;
 
-  /*bcrypt.hash(req.body.password, saltRounds).then(function(hashed){
-    userPsw = hash;
-  });*/
-
+  let hashedPsw = await bcrypt.hash(req.body.password, saltRounds)
+  .then(function(hash){
+    return hash;
+  });
 
   let sql =  `insert into public."Users" ("username","name", "email", "password")
-  values('${username}', '${fullName}', '${userEmail}', '${userPsw}')
+  values('${username}', '${fullName}', '${userEmail}', '${hashedPsw}')
   returning "id", "username", "name", "email", "role";`;
 
   try {
@@ -56,16 +57,25 @@ router.delete('/app/deleteUser/:id/', async function(req, res, next){
 });
 
 //---------- oppdatere bruker ----------
-router.post('/app/user/updateUser', async function(req, res, next){
+router.post('/app/user/updateUser', auth.verifyToken, async function(req, res, next){
 
   let userId = req.body.userid;
   let column = req.body.column;
   let newValue = req.body.value;
 
-  let sql = `update public."Users" set ${column} = '${newValue}'
-  where id = '${userId}' returning name, username, email;`;
-
   try {
+
+    if(column === 'password'){
+      newValue = await bcrypt.hash(req.body.value, saltRounds)
+      .then(function(hash){
+        console.log(hash);
+        return hash;
+      });
+    }
+
+    let sql = `update public."Users" set ${column} = '${newValue}'
+    where id = '${userId}' returning name, username, email;`;
+
     let data = await db.runQuery(sql);
     if(data){
       res.status(200).json(data[0]);
@@ -75,6 +85,30 @@ router.post('/app/user/updateUser', async function(req, res, next){
     }
   }
 
+  catch(err) {
+    res.status(500).json({error: err});
+  }
+
+});
+
+//---------- user metrics ----------
+router.get('/app/userMetrics/:id/', async function(req, res, next){
+
+  let id = req.params.id;
+
+  let sqlLists = `select count(*) as lists from public."Lists" l
+  join public."Users" u on (l.owner = u.id and u.id = '${id}');`;
+
+  let sqlItems = `select count(*) as items from public."Items" i
+ join public."Lists" l on (i.listid = l.id)
+  join public."Users" u on (l.owner = u.id and u.id = '${id}');`;
+
+  try {
+    let lists = await db.runQuery(sqlLists);
+    let items = await db.runQuery(sqlItems);
+    //res.status(200).json(lists);
+    res.status(200).send({lists: lists[0].lists, items: items[0].items})
+  }
   catch(err) {
     res.status(500).json({error: err});
   }
