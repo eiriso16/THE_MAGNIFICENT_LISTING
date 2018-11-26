@@ -331,6 +331,29 @@ body {
         text-shadow: 2px 1px #b08686;
     }
 
+/*Drop down menu for Tag Search*/
+    .dropMenu {
+        display: none;
+        position: absolute;
+        background-color: #f1f1f1;
+        min-width: 160px;
+        overflow: auto;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+    }
+
+    .dropMenu p {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+    }
+
+    .dropdown p:hover {background-color: #ddd;}
+
+    .show {display: block;}
+
+
 /*Css for importance level, normal, red, yellow, green*/
     .importance0 {
         background-color: rgba(52, 73, 94, 0.5);
