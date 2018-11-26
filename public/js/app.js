@@ -5,6 +5,7 @@ view();
 
 //display correct html
 function view(){
+  userResponse.innerHTML = "";
   if(!checkAuthentication()){
     addTemplate("userTemplate");
     let userForm = document.getElementById("newUser");
@@ -46,31 +47,43 @@ async function createUser(evt){
   let email = document.getElementById("newEmail").value;
   let password = document.getElementById("newPsw").value;
 
-  try {
-    let response = await fetch("/app/user", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json; charset=utf-8",
-      },
-      body: JSON.stringify({
-        username: username,
-        name: name,
-        email: email,
-        password: password
-      })
-    });
-  let data = await response.json();
-    if(response.status === 200 ){
-      userResponse.innerHTML = "User created, log in to proceed";
-    }
-    else if (response.status === 400){
-      userResponse.innerHTML = data.message;
-    }
+  let okPassword = checkPassword(password);
 
-  } catch(err){
-    userResponse.innerHTML = "Something went wrong: " + err;
-    console.log(err);
+  if(!okPassword){
+    userResponse.innerHTML = "password must be minimum 5 characters long";
   }
+  else {
+
+    try {
+      let response = await fetch("/app/user", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
+        },
+        body: JSON.stringify({
+          username: username,
+          name: name,
+          email: email,
+          password: password
+        })
+      });
+      let data = await response.json();
+      if(response.status === 200 ){
+        userResponse.innerHTML = "User created, log in to proceed";
+      }
+      else if (response.status === 400){
+        userResponse.innerHTML = data.message;
+      }
+
+    } catch(err){
+      userResponse.innerHTML = "Something went wrong: " + err;
+      console.log(err);
+    }
+  }
+}
+
+function checkPassword(password){
+  return password.length>4;
 }
 
 //-------------- Login user------------
@@ -239,31 +252,31 @@ async function updateUserPsw(){
 }
 
 async function deleting(){
-let delUser =  window.confirm("Are you sure? Deleting your account will also delete all your lists");
+  let delUser =  window.confirm("Are you sure? Deleting your account will also delete all your lists");
   if(delUser){
-  await deleteUsersLists();
-  await deleteUser();
+    await deleteUsersLists();
+    await deleteUser();
   }
 
 }
 
 // ---------- delete users lists ----------
 async function deleteUsersLists(){
-    let user = JSON.parse(localStorage.getItem("user"));
-    try {
-      let response = await fetch(`app/list/deleteAllLists/${user.id}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json; charset=utf-8",
-          "x-access-token": localStorage.getItem("token")
-        },
-      });
+  let user = JSON.parse(localStorage.getItem("user"));
+  try {
+    let response = await fetch(`app/list/deleteAllLists/${user.id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "x-access-token": localStorage.getItem("token")
+      },
+    });
 
-      let data = await response.json();
+    let data = await response.json();
 
-    } catch(err){
-      console.log(err);
-    }
+  } catch(err){
+    console.log(err);
+  }
 
 }
 
@@ -271,7 +284,7 @@ async function deleteUsersLists(){
 async function deleteUser(){
   let user = JSON.parse(localStorage.getItem("user"));
   try {
-    let response = await fetch(`app/deleteUser/${user.id}/`, {
+    let response = await fetch(`app/user/deleteUser/${user.id}/`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json; charset=utf-8",
@@ -298,12 +311,9 @@ btnMetrics.onclick = showMetrics;
 async function showMetrics(){
   addTemplate("userMetricsTemplate");
   let user = JSON.parse(localStorage.getItem("user"));
-  let container = document.getElementById("userMetrics");
-  let output = document.createElement("div");
-  container.appendChild(output);
 
   try {
-    let response = await fetch(`app/userMetrics/${user.id}/`, {
+    let response = await fetch(`app/user/metrics/${user.id}/`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json; charset=utf-8",
@@ -311,14 +321,38 @@ async function showMetrics(){
       }
     });
 
-    let data = await response.json();
-    output.innerHTML = "You have " + data.lists + " lists containing a total of "
-    + data.items + " items";
-
+    let data = await response.json(); console.log(data);
+    if(data[0]){
+      showOutput(data[0]);
+    }
   } catch(err){
 
   }
 
+}
+
+//display user metrics
+function showOutput(data){
+  let container = document.getElementById("userMetrics");
+  container.classList.add("metricTitle");
+  let output = document.createElement("div");
+  output.classList.add("metricOutput");
+  container.appendChild(output);
+
+  let div1 = document.createElement("div");
+  let div2 = document.createElement("div");
+  let div3 = document.createElement("div");
+  let div4 = document.createElement("div");
+
+  div1.innerHTML = "Total lists: " + data.lists;
+  div2.innerHTML = "Total items in all lists: " + data.items;
+  div3.innerHTML = "Shared lists: " + data.sharedlists;
+  div4.innerHTML = "Done lists: " + data.donelists;
+
+  output.appendChild(div1);
+  output.appendChild(div2);
+  output.appendChild(div3);
+  output.appendChild(div4);
 }
 
 //----------Create List-------------
@@ -367,7 +401,7 @@ async function addItem(evt){
 
   try {
 
-    let url = 'app/list/item';
+    let url = 'app/item';
     let response = await fetch(url,{
       method:"POST",
       headers:{
@@ -415,7 +449,8 @@ async function usersLists(){
     lists.appendChild(span);
 
     if(data.length>0){
-      span.innerHTML = "Your lists";
+      span.innerHTML = "YOUR LISTS";
+      span.id = "listHeader";
 
       for(let i in data){
         let div = document.createElement("div");
@@ -452,10 +487,18 @@ function showList(evt){
   let btnUpdList = document.getElementById("btnUpdList");
   btnUpdList.onclick = updListName;
 
+  let btnShareList = document.getElementById("btnShareList");
+  btnShareList.onclick = shareListStart;
+
+  let btnTagList = document.getElementById("btnTagList");
+  btnTagList.onclick = dropdownOpen;
+
+
   showItems();
 
 }
 
+//edit listname
 function updListName(evt){
   let input = document.createElement("input");
   let button = document.createElement("button");
@@ -463,13 +506,13 @@ function updListName(evt){
   input.id = "listName";
   button.innerHTML = "Update name";
   button.id = "name";
+  button.classList.add("cssBtn");
   button.onclick = updateListName;
 
   evt.target.parentElement.appendChild(input);
   evt.target.parentElement.appendChild(button);
 }
 
-//update name of list
 async function updateListName(evt){
   let newValue = document.getElementById("listName").value;
   let column = evt.target.id;
@@ -506,14 +549,63 @@ async function updateListName(evt){
 
 }
 
+//sharing of lists
+function shareListStart(evt){
+  let input = document.createElement("input");
+  let button = document.createElement("button");
+
+  input.id = "username";
+  input.placeholder = "add username";
+  button.innerHTML = "Share list";
+  button.id = "shareduser";
+  button.onclick = shareList;
+
+  evt.target.parentElement.appendChild(input);
+  evt.target.parentElement.appendChild(button);
+}
+
+async function shareList(){
+  let username = document.getElementById("username").value;
+  let listId = localStorage.getItem("listId");
+
+  try {
+    let response = await fetch('app/list/shareList', {
+      method:"POST",
+      headers:{
+        "Content-Type": "application/json; charset=utf-8",
+        "x-access-token": localStorage.getItem("token")
+      },
+      body: JSON.stringify({
+        listid: listId,
+        username: username
+      })
+    });
+    let data = await response.json();
+    if(data){
+      userResponse.innerHTML =  data.name + " shared with " + username;
+    }
+    else {
+      userResponse.innerHTML = "Something went wrong";
+    }
+
+    removeInput("username", "shareduser");
+  }
+  catch(err){
+
+  }
+}
+
+let unique_tags = [];
+
 //show items in list
 async function showItems(){
   let listId = localStorage.getItem("listId");
   let itemsContainer = document.getElementById("itemsContainer");
   itemsContainer.innerHTML = "";
+  unique_tags = [];
 
   try {
-    let response = await fetch(`app/list/items/${listId}`, {
+    let response = await fetch(`app/items/${listId}`, {
       method: "GET",
       headers:{
         "Content-Type": "application/json; charset=utf-8",
@@ -525,6 +617,7 @@ async function showItems(){
     if(data){
       let checkCounter = 0;
       let alertMessage = "";
+      let tags = [];
       for(let i in data){
         let div = document.createElement("div");
         div.id = data[i].name;
@@ -537,9 +630,11 @@ async function showItems(){
         label.classList.add("itemlistName");
 
         let tagView = document.createElement("span");
-        tagView.id = "tagView";
         tagView.innerHTML = data[i].tag;
         tagView.classList.add("itemTag");
+        if(data[i].tag){
+          tags.push(data[i].tag);
+        }
 
         let checkBox = document.createElement("input");
         checkBox.type = "checkbox";
@@ -548,32 +643,51 @@ async function showItems(){
           checkBox.checked = true;
           checkCounter++;
         }
+        checkBox.style.cursor = "pointer";
         checkBox.classList.add("itemBox");
         checkBox.onclick = setChecked;
 
-        let span = document.createElement("span");
-        span.innerHTML = "x ";
-        span.id = data[i].name;
-        span.classList.add("itemlistDel");
-        span.onclick = deleteItem;
+        let del = document.createElement("img");
+        del.src = "../images/x.png";
+        del.style.width = "30px";
+        del.style.height = "auto";
+        del.style.cursor = "pointer";
+        del.id = data[i].name;
+        del.title = "Delete item";
+        del.style.cursor = "pointer";
+        del.classList.add("itemlistDel");
+        del.onclick = deleteItem;
 
-        let update = document.createElement("span");
-        update.innerHTML = "Update Tags ";
+        let update = document.createElement("img");
+        update.src = "../images/hash3.png";
+        update.style.width = "25px";
+        update.style.height = "auto";
         update.id = data[i].name;
+        update.title = "Tag item";
+        update.style.cursor = "pointer";
         update.classList.add("itemlistUpd");
         update.onclick = itemDetails;
 
-        let importance = document.createElement("span");
-        importance.innerHTML = "Set Importance ";
+        let importance = document.createElement("img");
+        importance.src = "../images/!!!.png";
+        importance.style.width = "30px";
+        importance.style.height = "auto";
+        importance.title = "Set Importance ";
         importance.id = data[i].name;
+        importance.style.cursor = "pointer";
         importance.classList.add("itemlistImp");
         importance.onclick = setImportance;
 
-        let deadline = document.createElement("span");
-        deadline.innerHTML = "Set Deadline ";
+        let deadline = document.createElement("img");
+        deadline.src = "../images/dead.png";
+        deadline.style.width = "30px";
+        deadline.style.height = "auto";
+        deadline.style.cursor = "pointer";
         deadline.id = data[i].name;
         if(data[i].duedate){
           deadline.title = data[i].duedate;
+        }else {
+          deadline.title = "Set deadline";
         }
         deadline.classList.add("itemDeadl");
         deadline.onclick = setDeadline;
@@ -581,7 +695,7 @@ async function showItems(){
         div.appendChild(label);
         div.appendChild(checkBox);
         div.appendChild(tagView);
-        div.appendChild(span);
+        div.appendChild(del);
         div.appendChild(deadline);
         div.appendChild(importance);
         div.appendChild(update);
@@ -602,12 +716,70 @@ async function showItems(){
       else {
         setListDone(listId, false);
       }
+
+      for (let i in tags) {
+        if (unique_tags.indexOf(tags[i]) === -1) {
+          unique_tags.push(tags[i]);
+        }
+      }
     }
 
   } catch(err) {
     console.log(err);
   }
 }
+
+function dropdownOpen() {
+  let tagContainer = document.getElementById("dropTags");
+  tagContainer.innerHTML = "";
+  let showAllTags = document.createElement("p");
+  showAllTags.id="showAll";
+  showAllTags.innerHTML="Show all";
+  showAllTags.onclick = filterTags;
+  tagContainer.appendChild(showAllTags);
+  for (let i in unique_tags){
+    let p = document.createElement("p");
+    p.id = unique_tags[i];
+    p.onclick = filterTags;
+    p.innerHTML = unique_tags[i];
+    tagContainer.appendChild(p);
+  }
+  tagContainer.classList.toggle("show");
+}
+
+function filterTags(evt){
+  let test = document.querySelectorAll(".itemTag");
+  for (let i in test){
+  if(evt.target.id === "showAll" && test[i].parentElement){
+    test[i].parentElement.style.display = "";
+  }
+
+  else if (test[i].innerHTML === evt.target.id){
+      test[i].parentElement.style.display = "";
+    }
+    else if(test[i].parentElement){
+      test[i].parentElement.style.display = "none";
+    }
+
+  }
+
+}
+
+//lukke dropdown ved å trykke hvor som helst i vinduet
+window.onclick = function(event) {
+  if (!event.target.matches('.cssBtn')) {
+
+    let dropdowns = document.getElementsByClassName("dropMenu");
+    //console.log("dropdown" + dropdowns);
+    for (let i = 0; i < dropdowns.length; i++) {
+      let openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+      }
+    }
+  }
+}
+
 
 //---------------deadline alert-------------------
 function checkDueDate(duedate, name){
@@ -668,7 +840,7 @@ async function setChecked(evt){
   let itemName = evt.target.parentElement.id;
 
   try {
-    let url = 'app/list/item/updateItem';
+    let url = 'app/item/updateItem';
     let response = await fetch(url,{
       method:"POST",
       headers:{
@@ -690,9 +862,13 @@ async function setChecked(evt){
   }
 }
 
-
 //------------------Update Item-------------
 function itemDetails(evt){
+
+if(document.getElementById("tagInp")){
+  removeInput("tagInp", "tag");
+}
+
   let inp = document.createElement("input");
   let inpBtn = document.createElement("button");
 
@@ -712,7 +888,7 @@ async function updateItem(evt){
   let itemName = evt.target.parentElement.id;
 
   try {
-    let url = 'app/list/item/updateItem';
+    let url = 'app/item/updateItem';
     let response = await fetch(url,{
       method:"POST",
       headers:{
@@ -747,14 +923,19 @@ function removeInput(elem1, elem2){
 
 //----------------item importance---------------------
 function setImportance(evt){
+  if(document.getElementById("0")){
+    removeInput("0", "1");
+    removeInput("2", "3");
+  }
+
   let imp1Btn = document.createElement("button");
   let imp2Btn = document.createElement("button");
   let imp3Btn = document.createElement("button");
   let imp4Btn = document.createElement("button");
 
-  imp1Btn.id ="1"; //high
+  imp1Btn.id ="3"; //high
   imp2Btn.id ="2"; //medium
-  imp3Btn.id ="3"; //low
+  imp3Btn.id ="1"; //low
   imp4Btn.id ="0";
 
   imp1Btn.innerHTML="High";
@@ -779,7 +960,7 @@ async function updateImp(evt){
   let itemName = evt.target.parentElement.id;
 
   try {
-    let url = 'app/list/item/updateItem';
+    let url = 'app/item/updateItem';
     let response = await fetch(url,{
       method:"POST",
       headers:{
@@ -806,6 +987,11 @@ async function updateImp(evt){
 
 //----------------set deadline-------------------
 function setDeadline(evt){
+
+  if(document.getElementById("dateInp")){
+    removeInput("dateInp", "date");
+  }
+
   let date = document.createElement("input");
   let dateBtn = document.createElement("button");
 
@@ -826,7 +1012,7 @@ async function updateDeadline(evt){
   let itemName = evt.target.parentElement.id;
 
   try {
-    let url = 'app/list/item/updateItem';
+    let url = 'app/item/updateItem';
     let response = await fetch(url,{
       method:"POST",
       headers:{
@@ -856,12 +1042,12 @@ async function deleteItem(evt){
   let listId = localStorage.getItem("listId");
   let itemName = evt.target.id;
   try {
-    let response = await fetch(`/app/list/deleteItem/${listId}/${itemName}`, {
+    let response = await fetch(`/app/item/deleteItem/${listId}/${itemName}`, {
       method: "DELETE",
       headers:{
-       "Content-Type": "application/json; charset=utf-8",
-       "x-access-token": localStorage.getItem("token")
-     }
+        "Content-Type": "application/json; charset=utf-8",
+        "x-access-token": localStorage.getItem("token")
+      }
     });
     let data = await response.json();
     showItems();
@@ -876,12 +1062,12 @@ async function deleteAllItemsInList(){
   let listId = localStorage.getItem("listId");
 
   try {
-    let response = await fetch(`app/list/deleteItems/${listId}`, {
+    let response = await fetch(`app/item/deleteItems/${listId}`, {
       method: "DELETE",
       headers:{
-       "Content-Type": "application/json; charset=utf-8",
-       "x-access-token": localStorage.getItem("token")
-     }
+        "Content-Type": "application/json; charset=utf-8",
+        "x-access-token": localStorage.getItem("token")
+      }
     });
     let data = await response.json();
     await deleteList();
@@ -895,11 +1081,10 @@ async function deleteAllItemsInList(){
 
 // -----------delete list--------------
 async function deleteList(){
-  //  let id = document.getElementById("delList").value;
   let id = localStorage.getItem("listId");
   let delListResp = document.getElementById("delListResp");
   try {
-    let response = await fetch(`app/deleteList/${id}/`, {
+    let response = await fetch(`app/list/deleteList/${id}/`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json; charset=utf-8",
@@ -907,7 +1092,7 @@ async function deleteList(){
       }
     });
     let data = await response.json();
-    //kommer ikke hit?
+
     if(data.length === 1){
       localStorage.removeItem("listId");
       delListResp.innerHTML = "List " + data[0].id + " deleted";
