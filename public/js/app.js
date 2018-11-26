@@ -652,7 +652,7 @@ async function showItems(){
 
         let del = document.createElement("img");
         del.src = "../images/x.png";
-        del.style.width = "30px";
+        del.style.width = "20px";
         del.style.height = "auto";
         del.style.cursor = "pointer";
         del.id = data[i].name;
@@ -673,7 +673,7 @@ async function showItems(){
 
         let importance = document.createElement("img");
         importance.src = "../images/!!!.png";
-        importance.style.width = "30px";
+        importance.style.width = "35px";
         importance.style.height = "auto";
         importance.title = "Set Importance ";
         importance.id = data[i].name;
@@ -683,7 +683,7 @@ async function showItems(){
 
         let deadline = document.createElement("img");
         deadline.src = "../images/dead.png";
-        deadline.style.width = "30px";
+        deadline.style.width = "35px";
         deadline.style.height = "auto";
         deadline.style.cursor = "pointer";
         deadline.id = data[i].name;
