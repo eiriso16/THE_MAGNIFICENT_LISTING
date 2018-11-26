@@ -3,7 +3,7 @@ const router = express.Router();
 const db = require("./db.js");
 const auth = require('./auth.js');
 
-//---------- opprette ny bruker ----------
+//---------- create user ----------
 router.post('/app/user', auth.crypt, async function(req,res,next){
 
   let username = req.body.username;
@@ -22,7 +22,7 @@ router.post('/app/user', auth.crypt, async function(req,res,next){
       res.status(200).json(data);
 
     } else {
-        res.status(400).json({message: "not a unique username/email"});
+      res.status(400).json({message: "not a unique username/email"});
     }
   }
   catch(err) {
@@ -30,8 +30,8 @@ router.post('/app/user', auth.crypt, async function(req,res,next){
   }
 });
 
-//---------- slette bruker ----------
-router.delete('/app/deleteUser/:id/', auth.verifyToken, async function(req, res, next){
+//---------- delete user ----------
+router.delete('/app/user/deleteUser/:id/', auth.verifyToken, async function(req, res, next){
 
   let id = req.params.id;
 
@@ -47,7 +47,7 @@ router.delete('/app/deleteUser/:id/', auth.verifyToken, async function(req, res,
   }
 });
 
-//---------- oppdatere bruker ----------
+//---------- update user ----------
 router.post('/app/user/updateUser', auth.verifyToken, async function(req, res, next){
 
   let userId = req.body.userid;
@@ -74,7 +74,7 @@ router.post('/app/user/updateUser', auth.verifyToken, async function(req, res, n
 
 });
 
-//---------- oppdatere brukers passord ----------
+//---------- update users password ----------
 router.post('/app/user/updateUserPsw', auth.verifyToken, auth.crypt, async function(req, res, next){
 
   let userId = req.body.userid;
@@ -102,22 +102,22 @@ router.post('/app/user/updateUserPsw', auth.verifyToken, auth.crypt, async funct
 
 
 //---------- user metrics ----------
-router.get('/app/userMetrics/:id/', auth.verifyToken, async function(req, res, next){
+router.get('/app/user/metrics/:id/', auth.verifyToken, async function(req, res, next){
 
   let id = req.params.id;
 
-  let sqlLists = `select count(*) as lists from public."Lists" l
-  join public."Users" u on (l.owner = u.id and u.id = '${id}');`;
+  let sql = `select distinct (select count(*) from public."Lists" where owner = '${id}' or shareduser = '${id}') as lists,
+    (select count(*) from public."Items" i
+    join public."Lists" l on (i.listid = l.id)
+    join public."Users" u on ((l.owner = u.id or l.shareduser = u.id) and u.id = '${id}') ) as items,
+    (select count(*) from public."Lists" where (shareduser is not null and owner = '${id}') or shareduser = '${id}') as sharedlists,
+    (select count(*) from public."Lists" where ((done = true and owner = '${id}')  or (done = true and shareduser = '${id}')) ) as donelists
+    from public."Lists";`;
 
-  let sqlItems = `select count(*) as items from public."Items" i
-  join public."Lists" l on (i.listid = l.id)
-  join public."Users" u on (l.owner = u.id and u.id = '${id}');`;
 
   try {
-    let lists = await db.runQuery(sqlLists);
-    let items = await db.runQuery(sqlItems);
-    //res.status(200).json(lists);
-    res.status(200).send({lists: lists[0].lists, items: items[0].items})
+    let data = await db.runQuery(sql);
+    res.status(200).json(data);
   }
   catch(err) {
     res.status(500).json({error: err});
