@@ -206,7 +206,7 @@ body {
 }
 
 /*List response text*/
-    #listResp, #userResp, #deleteResp, #itemResp {
+    #listResp, #userResp, #deleteResp, #itemResp, #userResponse, #createUserResp {
         color: black;
         text-align: center;
         font-weight: bold;
