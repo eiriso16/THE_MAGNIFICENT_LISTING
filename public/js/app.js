@@ -46,11 +46,11 @@ async function createUser(evt){
   let name = document.getElementById("newName").value;
   let email = document.getElementById("newEmail").value;
   let password = document.getElementById("newPsw").value;
-
+  let createUserResp = document.getElementById("createUserResp");
   let okPassword = checkPassword(password);
 
   if(!okPassword){
-    userResponse.innerHTML = "password must be minimum 5 characters long";
+  createUserResp.innerHTML = "password must be minimum 5 characters long";
   }
   else {
 
@@ -69,14 +69,14 @@ async function createUser(evt){
       });
       let data = await response.json();
       if(response.status === 200 ){
-        userResponse.innerHTML = "User created, log in to proceed";
+        createUserResp.innerHTML = "User created, log in to proceed";
       }
       else if (response.status === 400){
-        userResponse.innerHTML = data.message;
+        createUserResp.innerHTML = data.message;
       }
 
     } catch(err){
-      userResponse.innerHTML = "Something went wrong: " + err;
+      createUserResp.innerHTML = "Something went wrong: " + err;
       console.log(err);
     }
   }
@@ -90,6 +90,7 @@ function checkPassword(password){
 async function loginUser(){
   let username = document.getElementById("userName").value;
   let password = document.getElementById("userPsw").value;
+  let userResp = document.getElementById("userResp");
 
   let credentials = `Basic ${ btoa(username + ":" + password)}`;
   try{
@@ -105,16 +106,16 @@ async function loginUser(){
       localStorage.setItem("user", JSON.stringify(data.user));
       localStorage.setItem("token", data.token);
 
-      userResponse.innerHTML = "";
+      userResp.innerHTML = "";
       view();
       usersLists();
 
     }
     else if(response.status === 401){
-      userResponse.innerHTML = data.message;
+      userResp.innerHTML = data.message;
     }
     else if(response.status === 500){
-      userResponse.innerHTML = data.message;
+      userResp.innerHTML = data.message;
     }
   }
   catch(error) {
@@ -568,6 +569,7 @@ function shareListStart(evt){
 async function shareList(){
   let username = document.getElementById("newVal").value;
   let listId = localStorage.getItem("listId");
+  let listResp = document.getElementById("itemResp");
 
   try {
     let response = await fetch('app/list/shareList', {
@@ -583,10 +585,10 @@ async function shareList(){
     });
     let data = await response.json();
     if(data){
-      userResponse.innerHTML =  data.name + " shared with " + username;
+      listResp.innerHTML =  data.name + " shared with " + username;
     }
     else {
-      userResponse.innerHTML = "Something went wrong";
+      listResp.innerHTML = "Something went wrong";
     }
 
     removeInput("newVal", "shareduser");
@@ -650,7 +652,7 @@ async function showItems(){
 
         let del = document.createElement("img");
         del.src = "../images/x.png";
-        del.style.width = "30px";
+        del.style.width = "20px";
         del.style.height = "auto";
         del.style.cursor = "pointer";
         del.id = data[i].name;
@@ -671,7 +673,7 @@ async function showItems(){
 
         let importance = document.createElement("img");
         importance.src = "../images/!!!.png";
-        importance.style.width = "30px";
+        importance.style.width = "35px";
         importance.style.height = "auto";
         importance.title = "Set Importance ";
         importance.id = data[i].name;
@@ -681,7 +683,7 @@ async function showItems(){
 
         let deadline = document.createElement("img");
         deadline.src = "../images/dead.png";
-        deadline.style.width = "30px";
+        deadline.style.width = "35px";
         deadline.style.height = "auto";
         deadline.style.cursor = "pointer";
         deadline.id = data[i].name;
