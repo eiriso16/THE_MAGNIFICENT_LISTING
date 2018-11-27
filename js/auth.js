@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const jwt = require('jsonwebtoken');
 
-const TOKEN_KEY = process.env.TOKEN_KEY || 'thisisthemagnificentlocaltokenkey';
+const TOKEN_KEY = process.env.TOKEN_KEY;
 
 router.get('/app/authenticate', async function(req, res, next){
   let authHeader = req.headers.authorization;
@@ -17,8 +17,7 @@ router.get('/app/authenticate', async function(req, res, next){
     let base64Credentials = req.headers.authorization.split(' ')[1];
     let buffer = Buffer.from(base64Credentials, 'base64');
     let credentials = buffer.toLocaleString();
-    //let credentials = buffer.toString('utf-8'); //eller 'ascii' //æøå støttes ikke
-    ///todo støtte for æøå??
+    
     let username = credentials.split(':')[0];
     let password = credentials.split(':')[1];
 
